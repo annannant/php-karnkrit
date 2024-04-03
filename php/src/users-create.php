@@ -3,6 +3,6 @@
 <?php
 
 $title = 'Home';
-$childView = 'views/_index.php';
+$childView = 'views/_users-create.php';
 
 include('layout.php');
