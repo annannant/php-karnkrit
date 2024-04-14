@@ -17,9 +17,9 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
-      MYSQL_DATABASE: MYSQL_DATABASE
-      MYSQL_USER: MYSQL_USER
-      MYSQL_PASSWORD: MYSQL_PASSWORD
+      MYSQL_DATABASE: laboratory
+      MYSQL_USER: laboratory
+      MYSQL_PASSWORD: password
     ports:
       - "9906:3306"
   phpmyadmin:

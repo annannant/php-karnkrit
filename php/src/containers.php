@@ -1,6 +1,6 @@
 <?php
 
 $title = 'Patients';
-$child = 'views/_patients.php';
+$child = 'views/_containers.php';
 
 include('layout/layout.php');

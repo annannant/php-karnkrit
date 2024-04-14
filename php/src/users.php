@@ -1,8 +1,6 @@
-
-
 <?php
 
-$title = 'Home';
-$childView = 'views/_users.php';
+$title = 'users';
+$child = 'views/_users.php';
 
-include('layout.php');
+include('layout/layout.php');
