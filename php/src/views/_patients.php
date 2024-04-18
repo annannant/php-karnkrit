@@ -15,6 +15,7 @@ if (isset($_GET['search'])) {
   ORDER BY pid DESC;";
 }
 
+$patients = [];
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
     while ($data = $result->fetch_object()) {
