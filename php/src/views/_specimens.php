@@ -12,7 +12,7 @@ if (isset($_GET['search'])) {
   specimen_name LIKE '%". $search ."%' OR 
   specimen_type LIKE '%". $search ."%' OR 
   container.container_name LIKE '%". $search ."%'
-  ORDER BY specimen_id DESC;";
+  ORDER BY specimen_id;";
 }
 
 $specimens = [];
