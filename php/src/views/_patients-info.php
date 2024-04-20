@@ -26,7 +26,7 @@ if (isset($_GET['pid'])) {
   $dobYear = $dbb[0];
   $dobMonth = $dbb[1];
   $dobDate = $dbb[2];
-  print_r($info);
+  // print_r($info);
   $conn->close();
 }
 // --- END : SELECT BY PID ---
