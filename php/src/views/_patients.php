@@ -44,70 +44,14 @@ if ($result->num_rows > 0) {
 </form>
 <!-- END: FORM SEARCH -->
 <hr />
-<p></p>
-<h3>Create Patient</h3>
-<p></p>
-<!-- START: FORM CREATE -->
-<form class="row g-3" method="post" action="views/_patients-create.php">
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <label for="firstName" class="form-label">First Name</label>
-        <input type="input" class="form-control" name="firstName" placeholder="">
-      </div>
-      <div class="col">
-        <label for="lastName" class="form-label">Last Name</label>
-        <input type="input" class="form-control" name="lastName" placeholder="">
-      </div>
-      <div class="col">
-        <label for="" class="form-label">DOB</label>
-        <div class="d-flex gap-0 column-gap-3">
-          <input type="number" class="form-control" name="dobDate" placeholder="DD">
-          <input type="number" class="form-control" name="dobMonth" placeholder="MM">
-          <input type="number" class="form-control" name="dobYear" placeholder="YYYY">
-        </div>
-      </div>
-    </div>
-    <div class="row mt-2">
-      <div class="col">
-        <label for="firstName" class="form-label">Gender</label>
-        <div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="gender" id="gender1" value="M">
-            <label class="form-check-label" for="gender1">Male</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="gender" id="gender2" value="F">
-            <label class="form-check-label" for="gender2">Female</label>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <label for="bloodGRoup" class="form-label">Blood Group</label>
-        <div>
-          <select name="bloodGroup" class="form-select" aria-label="Default select example">
-            <option selected></option>
-            <option value="A">A</option>
-            <option value="B">B</option>
-            <option value="O">O</option>
-            <option value="AB">AB</option>
-          </select>
-        </div>
-      </div>
-      <div class="col d-flex align-items-end">
-        <button type="submit" class="btn btn-primary ">Submit</button>
-      </div>
-    </div>
-  </div>
-</form>
-<!-- END: FORM CREATE -->
 
 <p></p>
 
-<hr />
-
 <p></p>
-<h3>Patient List</h3>
+<div class="w-full d-flex justify-content-between">
+  <h3>Patient List</h3>
+  <a href="/patients-info.php" class="btn btn-primary " role="button" aria-disabled="true">Create Patient</a>
+</div>
 
 <p></p>
 <table class="table table-striped">
@@ -121,6 +65,7 @@ if ($result->num_rows > 0) {
       <th scope="col">Gender</th>
       <th scope="col">Blood Group</th>
       <th scope="col">Visits</th>
+      <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
@@ -144,6 +89,9 @@ if ($result->num_rows > 0) {
       <td scope="col"><?php echo $patient->gender; ?></td>
       <td scope="col"><?php echo $patient->bloodgroup; ?></td>
       <td scope="col"></td>
+      <td scope="col">
+        <a href="/patients-info.php?pid=<?php echo $patient->pid; ?>" class="btn btn-default btn-sm" role="button" aria-disabled="true">Edit</a>
+      </td>
     </tr>
     <?php } ?>
 
