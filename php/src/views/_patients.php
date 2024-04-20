@@ -17,6 +17,10 @@ if (isset($_GET['search'])) {
 
 $patients = [];
 $result = $conn->query($sql);
+if ($conn->error) {
+  echo $conn->error;
+}
+
 if ($result->num_rows > 0) {
     while ($data = $result->fetch_object()) {
         $patients[] = $data;

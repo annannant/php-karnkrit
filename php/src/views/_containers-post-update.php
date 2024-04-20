@@ -3,12 +3,14 @@ include ('../config/db.php');
 
 if (isset($_POST['containerName'])) {
   $containerName = $_POST['containerName'];
+  $status = $_POST['status'];
   $isEdit = isset($_POST['containerID']) ? true : false;
 
-  $sql = "INSERT INTO container VALUES (NULL, '" . $containerName . "', NOW(), 0);";
+  $sql = "INSERT INTO container VALUES (NULL, '" . $containerName . "', NOW(), ".$status.");";
   if ($isEdit) {
     $sql = "UPDATE container SET
-      container_name = '" . $containerName . "'
+      container_name = '" . $containerName . "',
+      status = '" . $status . "'
       WHERE container_id = '" . $_POST['containerID'] . "';
       ";
   }

@@ -23,6 +23,7 @@ if (isset($_POST['firstName'])) {
   }
 
   // echo $sql;
+  // exit();
   // print_r($_POST);
 
   if ($conn->query($sql)) {

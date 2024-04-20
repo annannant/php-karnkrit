@@ -15,6 +15,10 @@ if (isset($_GET['search'])) {
 
 $containers = [];
 $result = $conn->query($sql);
+if ($conn->error) {
+  echo $conn->error;
+}
+
 if ($result->num_rows > 0) {
     while ($data = $result->fetch_object()) {
         $containers[] = $data;
@@ -57,6 +61,8 @@ if ($result->num_rows > 0) {
     <tr>
       <th scope="col">Container Code</th>
       <th scope="col">Container Name</th>
+      <th scope="col">Status</th>
+      <th scope="col">Create Date</th>
       <th scope="col"></th>
     </tr>
   </thead>
@@ -66,6 +72,8 @@ if ($result->num_rows > 0) {
     <tr>
       <td scope="col"><?php echo $patient->container_id; ?></td>
       <td scope="col"><?php echo $patient->container_name; ?></td>
+      <td scope="col"><?php echo $patient->status == 1 ? 'Active' : 'Inactive' ; ?></td>
+      <td scope="col"><?php echo $patient->create_date ; ?></td>
       <td scope="col">
         <a href="/containers-info.php?container_id=<?php echo $patient->container_id; ?>" class="btn btn-default btn-sm" role="button" aria-disabled="true">Edit</a>
       </td>
