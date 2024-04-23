@@ -17,7 +17,6 @@ if (isset($_POST['containerName'])) {
 
   // echo $sql;
   // print_r($_POST);
-
   if ($conn->query($sql)) {
     echo "New record created successfully";
   } else {

@@ -11,6 +11,8 @@ services:
       - ./php/src:/var/www/html/
     ports:
       - 8000:80
+    environment:
+      TZ: Asia/Bangkok
   db:
     container_name: db
     image: mysql
@@ -20,6 +22,7 @@ services:
       MYSQL_DATABASE: laboratory
       MYSQL_USER: laboratory
       MYSQL_PASSWORD: password
+      TZ: Asia/Bangkok
     ports:
       - "9906:3306"
   phpmyadmin:
