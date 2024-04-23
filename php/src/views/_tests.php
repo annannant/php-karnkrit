@@ -6,7 +6,7 @@ $search = '';
 $sql = 'SELECT lab_test.*, section.section_name, specimen.specimen_name FROM lab_test 
 INNER JOIN section ON section.section_id = lab_test.section_id 
 INNER JOIN specimen ON specimen.specimen_id = lab_test.specimen_id 
-ORDER BY test_id DESC;';
+ORDER BY test_id;';
 
 if (isset($_GET['search'])) {
   $search = $_GET['search'];
@@ -19,7 +19,7 @@ if (isset($_GET['search'])) {
   ref_range LIKE '%". $search ."%' OR 
   section.section_name LIKE '%". $search ."%' OR
   specimen.specimen_name LIKE '%". $search ."%'
-  ORDER BY test_id DESC;";
+  ORDER BY test_id;";
 }
 
 $lab_tests = [];
@@ -37,7 +37,7 @@ if ($result->num_rows > 0) {
 
 ?>
 
-<h1>Lab Tests</h1>
+<h1>Tests</h1>
 
 <!-- START: FORM SEARCH -->
 <form class="row g-3" method="get" action="tests.php">
@@ -72,10 +72,10 @@ if ($result->num_rows > 0) {
       <th scope="col">Test ID</th>
       <th scope="col">Test Name</th>
       <th scope="col">Ref Range</th>
-      <th scope="col">Create Date</th>
-      <th scope="col">Status</th>
-      <th scope="col">Section</th>
       <th scope="col">Specimen</th>
+      <th scope="col">Section</th>
+      <th scope="col">Status</th>
+      <th scope="col">Create Date</th>
       <th scope="col"></th>
     </tr>
   </thead>
@@ -86,10 +86,10 @@ if ($result->num_rows > 0) {
       <td scope="col"><?php echo $lab_test->test_id; ?></td>
       <td scope="col"><?php echo $lab_test->test_name; ?></td>
       <td scope="col"><?php echo $lab_test->ref_range; ?></td>
-      <td scope="col"><?php echo $lab_test->status == 1 ? 'Active' : 'Inactive' ; ?></td>
-      <td scope="col"><?php echo $lab_test->create_date; ?></td>
-      <td scope="col"><?php echo $lab_test->section_name; ?></td>
       <td scope="col"><?php echo $lab_test->specimen_name; ?></td>
+      <td scope="col"><?php echo $lab_test->section_name; ?></td>
+      <td scope="col"><?php echo $lab_test->status == 1 ? 'Active' : 'Inactive' ; ?></td>
+      <td scope="col"><?php echo convertDate($lab_test->create_date); ?></td>
       <td scope="col">
         <a href="/tests-info.php?test_id=<?php echo $lab_test->test_id; ?>" class="btn btn-default btn-sm" role="button" aria-disabled="true">Edit</a>
       </td>

@@ -79,7 +79,7 @@ if ($result->num_rows > 0) {
       <td scope="col"><?php echo $specimen->specimen_name; ?></td>
       <td scope="col"><?php echo $specimen->specimen_type; ?></td>
       <td scope="col"><?php echo $specimen->status == 1 ? 'Active' : 'Inactive' ; ?></td>
-      <td scope="col"><?php echo $specimen->create_date; ?></td>
+      <td scope="col"><?php echo convertDate($specimen->create_date); ?></td>
       <td scope="col"><?php echo $specimen->container_name; ?></td>
       <td scope="col">
         <a href="/specimens-info.php?specimen_id=<?php echo $specimen->specimen_id; ?>" class="btn btn-default btn-sm" role="button" aria-disabled="true">Edit</a>

@@ -2,10 +2,12 @@
 
 $host = 'db';
 $user = 'laboratory';
-$pass = 'password';
+$password = 'password';
 $db = 'laboratory';
- 
-$conn = new mysqli($host, $user, $pass, $db);
+
+date_default_timezone_set("Asia/Bangkok");
+
+$conn = new mysqli($host, $user, $password, $db);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }

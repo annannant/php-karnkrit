@@ -50,7 +50,7 @@ $conn->close();
 
 <p></p>
 <h3>
-  <?php echo ($isEdit) ? "Edit" : "Create"; ?> Lab Test
+  <?php echo ($isEdit) ? "Edit" : "Create"; ?> Test
 </h3>
 <p></p>
 <!-- START: FORM CREATE -->
@@ -74,20 +74,6 @@ $conn->close();
         <input type="input" class="form-control" name="refRange" placeholder=""
           value="<?php echo $info->ref_range; ?>">
       </div>
-   
-      <div class="col-full">
-        <label for="sectionID" class="form-label">Section</label>
-        <div>
-          <select name="sectionID" class="form-select" aria-label="Default select example">
-            <option <?php echo $info->section_id === '' ? 'selected' : '' ?>></option>
-            <?php foreach ($sections as $section) { ?>
-              <option value="<?php echo $section->section_id; ?>" <?php echo $info->section_id === $section->section_id ? 'selected' : '' ?>>
-                <?php echo $section->section_name; ?>
-              </option>
-            <?php } ?>
-          </select>
-        </div>
-      </div>
       <div class="col-full">
         <label for="specimenID" class="form-label">Specimen</label>
         <div>
@@ -96,6 +82,19 @@ $conn->close();
             <?php foreach ($specimens as $specimen) { ?>
               <option value="<?php echo $specimen->specimen_id; ?>" <?php echo $info->specimen_id === $specimen->specimen_id ? 'selected' : '' ?>>
                 <?php echo $specimen->specimen_name; ?>
+              </option>
+            <?php } ?>
+          </select>
+        </div>
+      </div>
+      <div class="col-full">
+        <label for="sectionID" class="form-label">Section</label>
+        <div>
+          <select name="sectionID" class="form-select" aria-label="Default select example">
+            <option <?php echo $info->section_id === '' ? 'selected' : '' ?>></option>
+            <?php foreach ($sections as $section) { ?>
+              <option value="<?php echo $section->section_id; ?>" <?php echo $info->section_id === $section->section_id ? 'selected' : '' ?>>
+                <?php echo $section->section_name; ?>
               </option>
             <?php } ?>
           </select>
