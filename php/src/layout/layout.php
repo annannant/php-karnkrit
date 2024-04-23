@@ -44,7 +44,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="patients.php" class="nav-link
+          <a href="patient-rights.php" class="nav-link
             <?php echo strpos($uri, 'patient-rights') > 0 ? "active" : "link-body-emphasis"; ?>"
             aria-current="page">
             <!-- <i class="bi bi-pentagon me-2"></i> -->
