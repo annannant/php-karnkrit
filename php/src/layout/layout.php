@@ -1,3 +1,7 @@
+<?php
+  include ('./config/db.php');
+  include ('./config/datetime.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,12 +34,21 @@
       </a>
       <hr>
       <ul class="nav nav-pills flex-column mb-auto">
+      
         <li class="nav-item">
           <a href="patients.php" class="nav-link
             <?php echo strpos($uri, 'patients') > 0 ? "active" : "link-body-emphasis"; ?>"
             aria-current="page">
             <!-- <i class="bi bi-pentagon me-2"></i> -->
             Patients
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="patients.php" class="nav-link
+            <?php echo strpos($uri, 'patient-rights') > 0 ? "active" : "link-body-emphasis"; ?>"
+            aria-current="page">
+            <!-- <i class="bi bi-pentagon me-2"></i> -->
+            Patient Rights
           </a>
         </li>
         <li>

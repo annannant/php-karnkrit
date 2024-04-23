@@ -56,7 +56,7 @@ $conn->close();
       </div>
       <div class="col-full">
         <label for="specimenType" class="form-label">Specimen Type</label>
-        <input type="input" class="form-control" name="specimenType" placeholder=""
+        <input type="number" class="form-control" name="specimenType" placeholder=""
           value="<?php echo $info->specimen_type; ?>">
       </div>
       <div class="col-full">

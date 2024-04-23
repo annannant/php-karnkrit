@@ -1,7 +1,6 @@
 <?php
-include ('./config/db.php');
 
-$title = 'Patients';
+$title = 'Containers';
 $child = 'views/_containers-info.php';
 
 include('layout/layout.php');
