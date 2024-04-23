@@ -40,7 +40,7 @@ $conn->close();
 <p></p>
 <!-- START: FORM CREATE -->
 <form class="row g-3" method="post" action="views/_specimens-post-update.php">
-  <div class="specimen mx-auto " style="width:50%;">
+  <div class="container mx-auto " style="width:50%;">
     <div class="row column-gap-3 row-gap-3">
       <?php if (isset($_GET['specimen_id'])): ?>
         <div class="col-full">

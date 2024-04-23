@@ -31,7 +31,7 @@ if ($result->num_rows > 0) {
 <h1>Patient Rights</h1>
 
 <!-- START: FORM SEARCH -->
-<form class="row g-3" method="get" action="patient_rights.php">
+<form class="row g-3" method="get" action="patient-rights.php">
   <div class="col-auto">
     <div class="input-group mb-3">
       <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i>
