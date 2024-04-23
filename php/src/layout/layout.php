@@ -51,14 +51,13 @@
             Patient Rights
           </a>
         </li>
-        <li>
+        <!-- <li>
           <a href="visits.php" class="nav-link 
           <?php echo strpos($uri, 'visits') > 0 ? "active" : "link-body-emphasis"; ?>"
           >
-          <!-- <i class="bi bi-pentagon me-2"></i> -->
             Visits
           </a>
-        </li>
+        </li> -->
         <li>
           <a href="lab-orders.php" class="nav-link 
           <?php echo strpos($uri, 'lab-orders') > 0  ? "active" : "link-body-emphasis"; ?>"

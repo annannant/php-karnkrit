@@ -92,7 +92,9 @@ if ($result->num_rows > 0) {
       </td>
       <td scope="col"><?php echo $patient->gender; ?></td>
       <td scope="col"><?php echo $patient->bloodgroup; ?></td>
-      <td scope="col"></td>
+      <td scope="col">
+        <a href="/visits.php?pid=<?php echo $patient->pid; ?>" class="btn btn-default btn-sm" role="button" aria-disabled="true">Visit</a>
+      </td>
       <td scope="col">
         <a href="/patients-info.php?pid=<?php echo $patient->pid; ?>" class="btn btn-default btn-sm" role="button" aria-disabled="true">Edit</a>
       </td>
