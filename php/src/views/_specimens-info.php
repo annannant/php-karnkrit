@@ -73,7 +73,7 @@ $conn->close();
         </div>
       </div>
       <div class="col-full">
-        <label for="containerID" class="form-label">Container ID</label>
+        <label for="containerID" class="form-label">Container</label>
         <div>
           <select name="containerID" class="form-select" aria-label="Default select example">
             <option <?php echo $info->container_id === '' ? 'selected' : '' ?>></option>
