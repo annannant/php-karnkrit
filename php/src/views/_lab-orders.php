@@ -4,18 +4,28 @@ include ('config/db.php');
 
 // START : SEARCH - LAB ORDERS
 $search = '';
-$sql = 'SELECT * FROM patient ORDER BY pid DESC;';
+$sql = 'SELECT * FROM order_test
+  INNER JOIN lab_order ON order_test.lab_order_ln = lab_order.ln
+  INNER JOIN patient ON lab_order.pid = patient.pid  
+  INNER JOIN lab_test ON order_test.lab_test_test_id = lab_test.test_id
+  INNER JOIN section ON lab_test.section_id = section.section_id
+  ORDER BY ln DESC;';
 
 if (isset($_GET['search'])) {
   $search = $_GET['search'];
-  $sql = "SELECT * FROM patient WHERE 
-  first_name LIKE '%" . $search . "%' OR 
-  last_name LIKE '%" . $search . "%' OR
-  pid LIKE '%" . $search . "%'
-  ORDER BY pid DESC;";
+  $sql = "SELECT * FROM order_test
+  INNER JOIN lab_order ON order_test.lab_order_ln = lab_order.ln
+  INNER JOIN patient ON lab_order.pid = patient.pid  
+  INNER JOIN lab_test ON order_test.lab_test_test_id = lab_test.test_id
+  INNER JOIN section ON lab_test.section_id = section.section_id
+  WHERE lab_order.ln LIKE '%" . $search . "%'
+  OR patient.pid LIKE '%" . $search . "%'
+  OR lab_order.vn LIKE '%" . $search . "%'
+  OR section.section_name LIKE '%" . $search . "%'
+  ORDER BY ln DESC;";
 }
 
-$patients = [];
+$orderLests = [];
 $result = $conn->query($sql);
 if ($conn->error) {
   echo $conn->error;
@@ -23,7 +33,7 @@ if ($conn->error) {
 
 if ($result->num_rows > 0) {
   while ($data = $result->fetch_object()) {
-    $patients[] = $data;
+    $orderLests[] = $data;
   }
 }
 // END : SEARCH - LAB ORDERS
@@ -48,7 +58,7 @@ if ($result->num_rows > 0) {
 <h1>Lab Orders</h1>
 
 <!-- START: FORM SEARCH -->
-<form class="row g-3" method="get" action="patients.php">
+<form class="row g-3" method="get" action="lab-orders.php">
   <div class="col-full">
     <div class="row column-gap-3 row-gap-3">
       <div class="col-full">
@@ -65,7 +75,7 @@ if ($result->num_rows > 0) {
         <label for="sectionID" class="form-label">Section</label>
         <div>
           <select name="sectionID" class="form-select" aria-label="Default select example">
-            <option value="" selected >All</option>
+            <option value="" selected>All</option>
             <?php foreach ($sections as $section) { ?>
               <option value="<?php echo $section->section_id; ?>">
                 <?php echo $section->section_name; ?>
@@ -111,15 +121,15 @@ if ($result->num_rows > 0) {
   </thead>
   <tbody>
     <!-- $patients = []; -->
-    <?php foreach ($patients as $patient) { ?>
+    <?php foreach ($orderLests as $orderLest) { ?>
       <tr>
-        <td scope="col"><?php echo $patient->pid; ?></td>
-        <td scope="col"><?php echo $patient->first_name; ?></td>
-        <td scope="col"><?php echo $patient->last_name; ?></td>
-        <td scope="col"><?php echo $patient->dob; ?></td>
-        <td scope="col"><?php echo $patient->gender; ?></td>
+        <td scope="col"><?php echo $orderLest->ln; ?></td>
+        <td scope="col"><?php echo $orderLest->pid; ?> - <?php echo $orderLest->first_name; ?> <?php echo $orderLest->last_name; ?></td>
+        <td scope="col"><?php echo $orderLest->section_name; ?></td>
+        <td scope="col"><?php echo $orderLest->requested_date; ?></td>
+        <td scope="col"><?php echo $orderLest->completed_date; ?></td>
         <td scope="col">
-          <a href="/patients-info.php?pid=<?php echo $patient->pid; ?>" class="btn btn-default btn-sm" role="button"
+          <a href="/patients-info.php?pid=<?php echo $orderLest->pid; ?>" class="btn btn-default btn-sm" role="button"
             aria-disabled="true">Edit</a>
         </td>
       </tr>
