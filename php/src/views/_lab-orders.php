@@ -9,21 +9,32 @@ $sql = 'SELECT * FROM order_test
   INNER JOIN patient ON lab_order.pid = patient.pid  
   INNER JOIN lab_test ON order_test.lab_test_test_id = lab_test.test_id
   INNER JOIN section ON lab_test.section_id = section.section_id
-  ORDER BY ln DESC;';
+  WHERE lab_order.ln IS NOT NULL';
 
-if (isset($_GET['search'])) {
+if (!empty($_GET['search'])) {
   $search = $_GET['search'];
-  $sql = "SELECT * FROM order_test
-  INNER JOIN lab_order ON order_test.lab_order_ln = lab_order.ln
-  INNER JOIN patient ON lab_order.pid = patient.pid  
-  INNER JOIN lab_test ON order_test.lab_test_test_id = lab_test.test_id
-  INNER JOIN section ON lab_test.section_id = section.section_id
-  WHERE lab_order.ln LIKE '%" . $search . "%'
+  $sql .= " AND (lab_order.ln LIKE '%" . $search . "%'
   OR patient.pid LIKE '%" . $search . "%'
+  OR patient.first_name LIKE '%" . $search . "%'
+  OR patient.last_name LIKE '%" . $search . "%'
   OR lab_order.vn LIKE '%" . $search . "%'
-  OR section.section_name LIKE '%" . $search . "%'
-  ORDER BY ln DESC;";
+  OR section.section_name LIKE '%" . $search . "%')";
 }
+
+$sectionID = "";
+if (!empty($_GET['sectionID'])) {
+  $sectionID = $_GET['sectionID'];
+  $sql .= " AND section.section_id = " . $sectionID;
+}
+
+$createDate = "";
+if (!empty($_GET['createDate'])) {
+  $createDate = $_GET['createDate'];
+  $sql .= " AND order_test.requested_date between '" . $createDate . "' and NOW()";
+}
+
+$sql .= ' ORDER BY ln DESC;';
+// echo $sql;
 
 $orderLests = [];
 $result = $conn->query($sql);
@@ -74,10 +85,10 @@ if ($result->num_rows > 0) {
       <div class="col">
         <label for="sectionID" class="form-label">Section</label>
         <div>
-          <select name="sectionID" class="form-select" aria-label="Default select example">
+          <select id="sectionID" name="sectionID" class="form-select" aria-label="Default select example">
             <option value="" selected>All</option>
             <?php foreach ($sections as $section) { ?>
-              <option value="<?php echo $section->section_id; ?>">
+              <option value="<?php echo $section->section_id; ?>" <?php echo $section->section_id === $sectionID ? 'selected' : '' ?>>
                 <?php echo $section->section_name; ?>
               </option>
             <?php } ?>
@@ -86,10 +97,11 @@ if ($result->num_rows > 0) {
       </div>
       <div class="col">
         <label for="createDate" class="form-label">Create Date</label>
-        <input type="input" readonly class="form-control " name="createDate" id="createDate" placeholder="" value="">
+        <input type="input" readonly class="form-control " name="createDate" id="createDate" placeholder="" value="<?php echo $createDate; ?>">
       </div>
-      <div class="row column-gap-3 row-gap-3">
-        <div class="col-full d-flex justify-content-end w-full">
+      <div class="row ">
+        <div class="col-full d-flex justify-content-end w-full column-gap-3 row-gap-3">
+          <a href="lab-orders.php" class="btn btn-light mb-3">Reset</a>
           <button type="submit" class="btn btn-primary mb-3">Search</button>
         </div>
       </div>
@@ -140,6 +152,18 @@ if ($result->num_rows > 0) {
 
 <script type="text/javascript">
   $(document).ready(function () {
-    $('#createDate').datepicker();
+    $('#createDate').datepicker({
+      dateFormat: "yy-mm-dd",
+      todayHighlight: true,
+      autoclose: true,
+    });
+    // $('#sectionID').change(function(){
+    //   var sectionID = $(this).val();
+    //   console.log('sectionID:', sectionID)
+    //   window.location = '/lab-orders.php?sectionID=' + sectionID + '&search=<?php echo $search ?>';
+    // })
+    $('#reset').click(function(){
+      window.location = '/lab-orders.php'
+    })
   });
 </script>
