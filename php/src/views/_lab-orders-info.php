@@ -32,9 +32,11 @@ if (isset($_GET['ln'])) { // is edit
   $sqlTest = "SELECT * FROM order_test 
   INNER JOIN lab_test ON order_test.lab_test_test_id = lab_test.test_id
   INNER JOIN specimen ON specimen.specimen_id = lab_test.specimen_id 
+  INNER JOIN section ON section.section_id = lab_test.section_id 
   WHERE lab_order_ln = '" . $ln . "' 
   ORDER BY order_test.requested_date ASC
   ;";
+
   $resultTest = $conn->query($sqlTest);
   if ($resultTest->num_rows > 0) {
     while ($data = $resultTest->fetch_object()) {
@@ -152,12 +154,13 @@ if ($result->num_rows > 0) {
             <thead>
               <tr>
                 <th scope="col" width="20%">Test ID / Test Name</th>
-                <th scope="col" width="10%">Ref Range</th>
-                <th scope="col" width="11%">Specimen</th>
                 <th scope="col" width="">Result</th>
-                <th scope="col" width="12%">Created Date/Time</th>
-                <th scope="col" width="12%">Completed Date/Time</th>
-                <th scope="col" width="12%"></th>
+                <th scope="col" width="10%">Ref Range</th>
+                <th scope="col" width="13%">Specimen</th>
+                <th scope="col" width="13%">Section</th>
+                <th scope="col" width="10%">Created Date/Time</th>
+                <th scope="col" width="10%">Completed Date/Time</th>
+                <th scope="col" width="6%"></th>
               </tr>
             </thead>
             <tbody>
@@ -177,14 +180,15 @@ if ($result->num_rows > 0) {
                     <input type="hidden" name="updateTestId[<?php echo $key + 1; ?>]"
                       id="updateTestId<?php echo $key + 1; ?>" value="<?php echo $orderTest->lab_test_test_id ?>">
                   </td>
-                  <td><?php echo $orderTest->ref_range ?></td>
-                  <td><?php echo $orderTest->specimen_name ?></td>
                   <td>
                     <input type="text" class="form-control" 
                       <?php echo !empty($orderTest->completed_date) ? 'disabled' : '' ?>
                       name="updateResult[<?php echo $key + 1; ?>]" id="updateResult<?php echo $key + 1; ?>"
                       value="<?php echo $orderTest->lab_test_result ?>">
                   </td>
+                  <td><?php echo $orderTest->ref_range ?></td>
+                  <td><?php echo $orderTest->specimen_name ?></td>
+                  <td><?php echo $orderTest->section_name ?></td>
                   <td><?php echo empty($orderTest->requested_date) ? '-' : $orderTest->requested_date; ?></td>
                   <td>
                     <?php if (empty($orderTest->completed_date)) { ?>
@@ -287,6 +291,7 @@ if ($result->num_rows > 0) {
               data-select-id="testId${rowCount}"
               data-name="${element.test_name}"
               data-ref="${element.ref_range}"
+              data-section_name="${element.section_name}"
               data-specimen="${element.specimen_name}">
                 ${element.test_id} - ${element.test_name}
             </option>`;
@@ -300,9 +305,10 @@ if ($result->num_rows > 0) {
             return `
                 <tr>
                   <td id="tdTestId${rowCount}">${sel}</td>
+                  <td id="tdResult${rowCount}">${inp}</td>
                   <td id="tdRef${rowCount}"></td>
                   <td id="tdSpecimen${rowCount}"></td>
-                  <td id="tdResult${rowCount}">${inp}</td>
+                  <td id="tdSection${rowCount}"></td>
                   <td id="tdCreatedDate${rowCount}">-</td>
                   <td id="tdCompletedDate${rowCount}">-</td>
                   <td id="delete${rowCount}">
@@ -321,6 +327,7 @@ if ($result->num_rows > 0) {
             let { rowId } = data?.element?.dataset;
             $('#tdRef' + rowId).text(data?.element?.dataset?.ref);
             $('#tdSpecimen' + rowId).text(data?.element?.dataset?.specimen);
+            $('#tdSection' + rowId).text(data?.element?.dataset?.section_name);
             $('#newTestName' + rowId).val(data?.element?.dataset?.name);
           });
         }
