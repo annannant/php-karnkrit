@@ -4,12 +4,16 @@ include ('config/db.php');
 
 // START : SEARCH - LAB ORDERS
 $search = '';
-$sql = 'SELECT * FROM order_test
+$sql = "SELECT lab_order.ln, concat(patient.first_name, ' ',patient.last_name) as name,
+    section.section_name, order_test.requested_date, order_test.completed_date,
+    patient.pid, patient.first_name, patient.last_name, lab_order.vn, section.section_name,
+    order_test.lab_order_ln
+ FROM order_test
   INNER JOIN lab_order ON order_test.lab_order_ln = lab_order.ln
-  INNER JOIN patient ON lab_order.pid = patient.pid  
+  INNER JOIN patient ON lab_order.pid = patient.pid
   INNER JOIN lab_test ON order_test.lab_test_test_id = lab_test.test_id
   INNER JOIN section ON lab_test.section_id = section.section_id
-  WHERE lab_order.ln IS NOT NULL';
+  WHERE lab_order.ln IS NOT NULL";
 
 if (!empty($_GET['search'])) {
   $search = $_GET['search'];
@@ -30,7 +34,7 @@ if (!empty($_GET['sectionID'])) {
 $createDate = "";
 if (!empty($_GET['createDate'])) {
   $createDate = $_GET['createDate'];
-  $sql .= " AND order_test.requested_date between '" . $createDate . "' and NOW()";
+  $sql .= " AND DATE_FORMAT(order_test.requested_date, '%Y-%m-%d') = '" . $createDate . "'";
 }
 
 $sql .= ' ORDER BY ln DESC, order_test.requested_date ASC;';
@@ -76,7 +80,7 @@ if ($result->num_rows > 0) {
         <div class="input-group mb-3">
           <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i>
           </span>
-          <input type="text" class="form-control" name="search" placeholder="Search By LN, HN, VN or Section Name"
+          <input type="text" class="form-control" name="search" placeholder="Search by LN, HN, VN or Section Name"
             aria-label="Search" aria-describedby="basic-addon1" style="width:720px;" value="<?php echo $search ?>">
         </div>
       </div>
@@ -136,13 +140,13 @@ if ($result->num_rows > 0) {
     <?php foreach ($orderLests as $orderLest) { ?>
       <tr>
         <td scope="col"><?php echo $orderLest->ln; ?></td>
-        <td scope="col"><?php echo $orderLest->pid; ?> - <?php echo $orderLest->first_name; ?> <?php echo $orderLest->last_name; ?></td>
+        <td scope="col"><?php echo $orderLest->pid; ?> - <?php echo $orderLest->name; ?></td>
         <td scope="col"><?php echo $orderLest->section_name; ?></td>
         <td scope="col"><?php echo $orderLest->requested_date; ?></td>
         <td scope="col"><?php echo $orderLest->completed_date; ?></td>
         <td scope="col">
           <a href="/lab-orders-info.php?ln=<?php echo $orderLest->ln; ?>" class="btn btn-light btn-sm" role="button"
-            aria-disabled="true">Edit</a>
+            aria-disabled="true">Fill Result</a>
         </td>
       </tr>
     <?php } ?>
