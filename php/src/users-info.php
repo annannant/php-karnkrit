@@ -1,6 +1,6 @@
 <?php
 
 $title = 'Users';
-$child = 'views/_users.php';
+$child = 'views/_users-info.php';
 
 include('layout/layout.php');
