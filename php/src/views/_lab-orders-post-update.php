@@ -57,7 +57,7 @@ if (isset($_POST['updateTestId'])) {
     }
 
     if ($updateCompletedValue !== null) {
-      $up[] = "completed_date = '" . $updateCompletedValue . "' ";
+      $up[] = "completed_date = NOW() ";
     }
 
     if (empty($up)) {
