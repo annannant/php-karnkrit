@@ -6,7 +6,7 @@ $search = '';
 $sql = 'SELECT lab_test.*, section.section_name, specimen.specimen_name FROM lab_test 
 INNER JOIN section ON section.section_id = lab_test.section_id 
 INNER JOIN specimen ON specimen.specimen_id = lab_test.specimen_id 
-ORDER BY test_id;';
+ORDER BY test_id DESC;';
 
 if (isset($_GET['search'])) {
   $search = $_GET['search'];
@@ -19,7 +19,7 @@ if (isset($_GET['search'])) {
   ref_range LIKE '%". $search ."%' OR 
   section.section_name LIKE '%". $search ."%' OR
   specimen.specimen_name LIKE '%". $search ."%'
-  ORDER BY test_id;";
+  ORDER BY test_id DESC;";
 }
 
 $lab_tests = [];

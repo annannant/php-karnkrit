@@ -3,7 +3,7 @@
 include ('config/db.php');
 
 $search = '';
-$sql = 'SELECT specimen.*, container.container_name FROM specimen INNER JOIN container ON container.container_id = specimen.container_id;';
+$sql = 'SELECT specimen.*, container.container_name FROM specimen INNER JOIN container ON container.container_id = specimen.container_id ORDER BY specimen.specimen_id DESC;';
 
 if (isset($_GET['search'])) {
   $search = $_GET['search'];
@@ -12,7 +12,7 @@ if (isset($_GET['search'])) {
   specimen_name LIKE '%". $search ."%' OR 
   specimen_type LIKE '%". $search ."%' OR 
   container.container_name LIKE '%". $search ."%'
-  ORDER BY specimen_id;";
+  ORDER BY specimen_id DESC;";
 }
 
 $specimens = [];
