@@ -113,9 +113,7 @@ if ($result->num_rows > 0) {
           <label for="pid" class="form-label">Patient ID (PID)</label>
           <div>
             <select id="pid" name="pid" class="js-example-basic-multiple js-states form-control"
-              aria-label="Default select example"
-              <?php echo $hasCompleted === true ? 'disabled' : '' ?>
-              >
+              aria-label="Default select example" <?php echo $hasCompleted === true ? 'disabled' : '' ?>>
               <option <?php echo $pid === '' ? 'selected' : '' ?>>Please Select</option>
               <?php foreach ($patients as $patient) { ?>
                 <option value="<?php echo $patient->pid; ?>" <?php echo $pid === $patient->pid ? 'selected' : '' ?>>
@@ -128,11 +126,9 @@ if ($result->num_rows > 0) {
         <div class="col-full">
           <label for="vn" class="form-label">Visit Number (VN)</label>
           <div>
-            <select id="vn" name="vn" 
-              class="js-example-basic-multiple js-states form-control" aria-label="Default select example"
-              <?php echo $isEdit ? "" : "disabled" ?>
-              <?php echo $hasCompleted === true ? 'disabled' : '' ?>
-              >
+            <select id="vn" name="vn" class="js-example-basic-multiple js-states form-control"
+              aria-label="Default select example"
+              disabled="<?php echo $hasCompleted === true || !$isEdit ? "disabled" : null  ?>">
               <option <?php echo $vn === '' ? 'selected' : '' ?>>Please Select</option>
               <?php foreach ($visits as $visit) { ?>
                 <option value="<?php echo $visit->vn; ?>" <?php echo $vn === $visit->vn ? 'selected' : '' ?>>
@@ -159,6 +155,7 @@ if ($result->num_rows > 0) {
                 <th scope="col" width="">Result</th>
                 <th scope="col" width="12%">Created Date/Time</th>
                 <th scope="col" width="12%">Completed Date/Time</th>
+                <th scope="col" width="12%"></th>
               </tr>
             </thead>
             <tbody>
@@ -175,22 +172,22 @@ if ($result->num_rows > 0) {
                         </option>
                       <?php } ?>
                     </select>
-                    <input type="hidden" name="updateTestId[<?php echo $key + 1; ?>]" id="updateTestId<?php echo $key + 1; ?>"
-                      value="<?php echo $orderTest->lab_test_test_id ?>">
+                    <input type="hidden" name="updateTestId[<?php echo $key + 1; ?>]"
+                      id="updateTestId<?php echo $key + 1; ?>" value="<?php echo $orderTest->lab_test_test_id ?>">
                   </td>
                   <td><?php echo $orderTest->ref_range ?></td>
                   <td><?php echo $orderTest->specimen_name ?></td>
                   <td>
-                    <input type="text" class="form-control"
-                    <?php echo $orderTest->completed_date !== null ? 'disabled' : '' ?>
-                    name="updateResult[<?php echo $key + 1; ?>]"
-                      id="updateResult<?php echo $key + 1; ?>" #addTest value="<?php echo $orderTest->lab_test_result ?>">
+                    <input type="text" class="form-control" name="updateResult[<?php echo $key + 1; ?>]"
+                      id="updateResult<?php echo $key + 1; ?>" value="<?php echo $orderTest->lab_test_result ?>"
+                      disabled="<?php echo $orderTest->completed_date !== null ? 'disabled' : false ?>">
                   </td>
                   <td><?php echo empty($orderTest->requested_date) ? '-' : $orderTest->requested_date; ?></td>
                   <td>
                     <?php if (empty($orderTest->completed_date)) { ?>
                       <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="checked" name="updateCompleted[<?php echo $key + 1 ?>]" id="updateCompleted<?php echo $key + 1 ?>">
+                        <input class="form-check-input" type="checkbox" value="checked"
+                          name="updateCompleted[<?php echo $key + 1 ?>]" id="updateCompleted<?php echo $key + 1 ?>">
                         <label class="form-check-label" for="updateCompleted<?php echo $key + 1 ?>">
                           Complete
                         </label>
@@ -198,6 +195,13 @@ if ($result->num_rows > 0) {
                     <?php } else {
                       echo $orderTest->completed_date;
                     } ?>
+                  </td>
+                  <td id="deleteRecord<?php echo $key + 1; ?>">
+                    <?php if ($orderTest->completed_date === null) { ?>
+                        <button type="button" class="btn btn-danger btn-sm"
+                        onclick="deleteRecord(<?php echo $key + 1; ?>, <?php echo $orderTest->lab_test_test_id ?>, <?php echo $orderTest->lab_order_ln ?>, )"
+                        >Delete</button>
+                    <?php } ?>
                   </td>
                 </tr>
               <?php } ?>
@@ -299,6 +303,9 @@ if ($result->num_rows > 0) {
                   <td id="tdResult${rowCount}">${inp}</td>
                   <td id="tdCreatedDate${rowCount}">-</td>
                   <td id="tdCompletedDate${rowCount}">-</td>
+                  <td id="delete${rowCount}">
+                    <button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(${rowCount})">Delete</button>
+                  </td>
                 </tr>
             `
           });
@@ -318,4 +325,28 @@ if ($result->num_rows > 0) {
       });
     });
   });
+
+  function deleteRow(rowId) {
+    var row = document.getElementById("delete" + rowId);
+    row.parentNode.remove();
+  }
+
+  function deleteRecord(rowId, testId, ln) {
+    // console.log('testId, ln:', testId, ln)
+    var row = document.getElementById("deleteRecord" + rowId);
+    row.parentNode.remove();
+    $.ajax({
+      url: "views/_ajax-delete-order-test.php",
+      type: "GET",
+      data: {
+        ln: ln,
+        testId: testId
+      },
+      dataType: "json",
+      success: function (data) {
+        console.log('data:', data)
+      }
+    });
+  }
+
 </script>

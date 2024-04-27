@@ -141,7 +141,7 @@ if ($result->num_rows > 0) {
         <td scope="col"><?php echo $orderLest->requested_date; ?></td>
         <td scope="col"><?php echo $orderLest->completed_date; ?></td>
         <td scope="col">
-          <a href="/lab-orders-info.php?ln=<?php echo $orderLest->ln; ?>" class="btn btn-default btn-sm" role="button"
+          <a href="/lab-orders-info.php?ln=<?php echo $orderLest->ln; ?>" class="btn btn-light btn-sm" role="button"
             aria-disabled="true">Edit</a>
         </td>
       </tr>
