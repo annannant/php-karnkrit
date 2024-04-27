@@ -2,7 +2,7 @@
 
 $pid = "";
 $patients = [];
-$sql = $sql = "SELECT * FROM patient ORDER BY pid DESC;";
+$sql = $sql = "SELECT * FROM patient ORDER BY pid ASC;";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
   while ($data = $result->fetch_object()) {
@@ -10,10 +10,60 @@ if ($result->num_rows > 0) {
   }
 }
 
+
+$isEdit = false;
+$ln = "";
 $vn = "";
+$info = new stdClass();
+$orderTests = [];
+$hasCompleted = false;
+if (isset($_GET['ln'])) { // is edit
+  $ln = $_GET['ln'];
+  $isEdit = true;
+  $sql = "SELECT * FROM lab_order WHERE ln = '" . $ln . "';";
+  $result = $conn->query($sql);
+  if ($result->num_rows > 0) {
+    $data = $result->fetch_object();
+    $ln = $data->ln;
+    $vn = $data->vn;
+    $pid = $data->pid;
+  }
+
+  $sqlTest = "SELECT * FROM order_test 
+  INNER JOIN lab_test ON order_test.lab_test_test_id = lab_test.test_id
+  INNER JOIN specimen ON specimen.specimen_id = lab_test.specimen_id 
+  WHERE lab_order_ln = '" . $ln . "';";
+  $resultTest = $conn->query($sqlTest);
+  if ($resultTest->num_rows > 0) {
+    while ($data = $resultTest->fetch_object()) {
+      $orderTests[] = $data;
+    }
+  }
+
+
+  // find complated data
+  foreach ($orderTests as $element) {
+    if ($element->completed_date !== null) {
+      $hasCompleted = true;
+      break;
+    }
+  }
+  // echo json_encode($orderTests);
+} else {
+  $sql = "SELECT MAX(ln) + 1 as latest_ln FROM lab_order LIMIT 1;";
+  $result = $conn->query($sql);
+  if ($result->num_rows > 0) {
+    $data = $result->fetch_object();
+    $ln = $data->latest_ln;
+  }
+  if ($ln === null) {
+    $ln = 6700001; // default ln
+  }
+}
+
 $visits = [];
 if ($pid !== "") {
-  $sql = $sql = "SELECT * FROM visit WHERE pid = '" . $search . "' ORDER BY visit_date DESC;";
+  $sql = $sql = "SELECT * FROM visit WHERE pid = '" . $pid . "' ORDER BY visit_date DESC;";
   $result = $conn->query($sql);
   if ($result->num_rows > 0) {
     while ($data = $result->fetch_object()) {
@@ -22,26 +72,19 @@ if ($pid !== "") {
   }
 }
 
-$isEdit = false;
-$ln = "";
-if (isset($_GET['ln'])) {
-  $ln = $_GET['ln'];
-  $isEdit = true;
-} else {
-  $sql = "SELECT MAX(ln) + 1 as latest_ln FROM lab_order LIMIT 1;";
-  $result = $conn->query($sql);
-  if ($result->num_rows > 0) {
-    $data = $result->fetch_object();
-    $ln = $data->latest_ln;
+
+
+$tests = [];
+$sql = 'SELECT lab_test.*, section.section_name, specimen.specimen_name FROM lab_test 
+INNER JOIN section ON section.section_id = lab_test.section_id 
+INNER JOIN specimen ON specimen.specimen_id = lab_test.specimen_id 
+ORDER BY test_id;';
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+  while ($data = $result->fetch_object()) {
+    $tests[] = $data;
   }
 }
-
-
-$info = new stdClass();
-$info->pid = "";
-$info->vn = "";
-
-
 
 
 ?>
@@ -70,10 +113,12 @@ $info->vn = "";
           <label for="pid" class="form-label">Patient ID (PID)</label>
           <div>
             <select id="pid" name="pid" class="js-example-basic-multiple js-states form-control"
-              aria-label="Default select example">
-              <option <?php echo $info->pid === '' ? 'selected' : '' ?>>Please Select</option>
+              aria-label="Default select example"
+              <?php echo $hasCompleted === true ? 'disabled' : '' ?>
+              >
+              <option <?php echo $pid === '' ? 'selected' : '' ?>>Please Select</option>
               <?php foreach ($patients as $patient) { ?>
-                <option value="<?php echo $patient->pid; ?>" <?php echo $info->pid === $patient->pid ? 'selected' : '' ?>>
+                <option value="<?php echo $patient->pid; ?>" <?php echo $pid === $patient->pid ? 'selected' : '' ?>>
                   <?php echo $patient->pid; ?> - <?php echo $patient->first_name; ?>   <?php echo $patient->last_name; ?>
                 </option>
               <?php } ?>
@@ -83,11 +128,14 @@ $info->vn = "";
         <div class="col-full">
           <label for="vn" class="form-label">Visit Number (VN)</label>
           <div>
-            <select id="vn" name="vn" disabled class="js-example-basic-multiple js-states form-control"
-              aria-label="Default select example">
-              <option <?php echo $info->vn === '' ? 'selected' : '' ?>>Please Select</option>
+            <select id="vn" name="vn" 
+              class="js-example-basic-multiple js-states form-control" aria-label="Default select example"
+              <?php echo $isEdit ? "" : "disabled" ?>
+              <?php echo $hasCompleted === true ? 'disabled' : '' ?>
+              >
+              <option <?php echo $vn === '' ? 'selected' : '' ?>>Please Select</option>
               <?php foreach ($visits as $visit) { ?>
-                <option value="<?php echo $visit->vn; ?>" <?php echo $info->vn === $visit->vn ? 'selected' : '' ?>>
+                <option value="<?php echo $visit->vn; ?>" <?php echo $vn === $visit->vn ? 'selected' : '' ?>>
                   <?php echo $visit->vn; ?> - <?php echo $visit->visit_date; ?>
                 </option>
               <?php } ?>
@@ -105,20 +153,58 @@ $info->vn = "";
           <table class="table table-striped" id="myTable">
             <thead>
               <tr>
-                <th scope="col" width="35%">Test ID / Test Name</th>
-                <th scope="col">Ref Range</th>
-                <th scope="col">Specimen</th>
-                <!-- <th scope="col">Result</th>
-                <th scope="col" width="11%">Create Date/Time</th>
-                <th scope="col" width="11%">Complete Date/Time</th> -->
+                <th scope="col" width="20%">Test ID / Test Name</th>
+                <th scope="col" width="10%">Ref Range</th>
+                <th scope="col" width="11%">Specimen</th>
+                <th scope="col" width="">Result</th>
+                <th scope="col" width="12%">Created Date/Time</th>
+                <th scope="col" width="12%">Completed Date/Time</th>
               </tr>
             </thead>
             <tbody>
+              <?php foreach ($orderTests as $key => $orderTest) { ?>
+                <tr>
+                  <td>
+                    <select disabled id="updateTest<?php echo $key + 1; ?>" name="updateTest[<?php echo $key + 1; ?>]"
+                      class="select-test-id js-example-basic-multiple js-states form-control"
+                      aria-label="Default select example">
+                      <option value="">Please Select</option>
+                      <?php foreach ($tests as $test) { ?>
+                        <option value="<?php echo $test->test_id; ?>" <?php echo $orderTest->lab_test_test_id === $test->test_id ? 'selected' : '' ?>>
+                          <?php echo $test->test_id; ?> - <?php echo $test->test_name; ?>
+                        </option>
+                      <?php } ?>
+                    </select>
+                    <input type="hidden" name="updateTestId[<?php echo $key + 1; ?>]" id="updateTestId<?php echo $key + 1; ?>"
+                      value="<?php echo $orderTest->lab_test_test_id ?>">
+                  </td>
+                  <td><?php echo $orderTest->ref_range ?></td>
+                  <td><?php echo $orderTest->specimen_name ?></td>
+                  <td>
+                    <input type="text" class="form-control"
+                    <?php echo $orderTest->completed_date !== null ? 'disabled' : '' ?>
+                    name="updateResult[<?php echo $key + 1; ?>]"
+                      id="updateResult<?php echo $key + 1; ?>" #addTest value="<?php echo $orderTest->lab_test_result ?>">
+                  </td>
+                  <td><?php echo empty($orderTest->requested_date) ? '-' : $orderTest->requested_date; ?></td>
+                  <td>
+                    <?php if (empty($orderTest->completed_date)) { ?>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="checked" name="updateCompleted[<?php echo $key + 1 ?>]" id="updateCompleted<?php echo $key + 1 ?>">
+                        <label class="form-check-label" for="updateCompleted<?php echo $key + 1 ?>">
+                          Complete
+                        </label>
+                      </div>
+                    <?php } else {
+                      echo $orderTest->completed_date;
+                    } ?>
+                  </td>
+                </tr>
+              <?php } ?>
             </tbody>
           </table>
         </div>
         <div class="col-full">
-
         </div>
       </div>
       <div class="row column-gap-3 row-gap-3">
@@ -147,6 +233,11 @@ $info->vn = "";
 <script type="text/javascript">
   $(document).ready(function () {
     $('.js-example-basic-multiple').select2();
+    $('.completeDate').datepicker({
+      dateFormat: "yy-mm-dd",
+      todayHighlight: true,
+      autoclose: true,
+    });
     $('#vn').select2();
     $('#pid').change(function () {
       $.ajax({
@@ -169,7 +260,6 @@ $info->vn = "";
       });
     });
 
-
     $('#addTest').click(function () {
       $.ajax({
         url: "views/_ajax-option-test.php",
@@ -177,8 +267,8 @@ $info->vn = "";
         dataType: "json",
         success: function (data) {
           var rowCount = $('#myTable > tbody > tr').length + 1;
-          var sel = `<select id="test${rowCount}" 
-              name="test[${rowCount}]" 
+          var sel = `<select id="newTest${rowCount}" 
+              name="newTest[${rowCount}]" 
               class="select-test-id js-example-basic-multiple js-states form-control"
               aria-label="Default select example">
               <option value="">Please Select</option>
@@ -197,17 +287,18 @@ $info->vn = "";
             sel += optionHTML;
           });
           sel += "</select>";
-          sel += `<input type="hidden" name="testName[${rowCount}]" id="testName${rowCount}" value="">`;
-          // console.log('sel:', sel)
+          sel += `<input type="hidden" name="newTestName[${rowCount}]" id="newTestName${rowCount}" value="">`;
+          var inp = '<input type="text" class="form-control" name="newResult[' + rowCount + ']" id="newResult' + rowCount + '">';
+          // var completeDate = '<input type="text" class="form-control" name="completeDate[' + rowCount + ']" id="completeDate' + rowCount + '" readonly>';
           $('#myTable').find('tbody').append(function (params) {
             return `
                 <tr>
                   <td id="tdTestId${rowCount}">${sel}</td>
                   <td id="tdRef${rowCount}"></td>
                   <td id="tdSpecimen${rowCount}"></td>
-                  // <td id="tdResult${rowCount}"></td>
-                  // <td id="tdCreatDate${rowCount}"></td>
-                  // <td id="tdCompleteDate${rowCount}"></td>
+                  <td id="tdResult${rowCount}">${inp}</td>
+                  <td id="tdCreatedDate${rowCount}">-</td>
+                  <td id="tdCompletedDate${rowCount}">-</td>
                 </tr>
             `
           });
@@ -221,7 +312,7 @@ $info->vn = "";
             let { rowId } = data?.element?.dataset;
             $('#tdRef' + rowId).text(data?.element?.dataset?.ref);
             $('#tdSpecimen' + rowId).text(data?.element?.dataset?.specimen);
-            $('#testName' + rowId).val(data?.element?.dataset?.name);
+            $('#newTestName' + rowId).val(data?.element?.dataset?.name);
           });
         }
       });

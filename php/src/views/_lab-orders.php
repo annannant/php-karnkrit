@@ -96,7 +96,7 @@ if ($result->num_rows > 0) {
         </div>
       </div>
       <div class="col">
-        <label for="createDate" class="form-label">Create Date</label>
+        <label for="createDate" class="form-label">Created Date</label>
         <input type="input" readonly class="form-control " name="createDate" id="createDate" placeholder="" value="<?php echo $createDate; ?>">
       </div>
       <div class="row ">
@@ -126,8 +126,8 @@ if ($result->num_rows > 0) {
       <th scope="col">Lab Number</th>
       <th scope="col">HN / Name</th>
       <th scope="col">Section</th>
-      <th scope="col">Create Date/Time</th>
-      <th scope="col">Complete Date/Time</th>
+      <th scope="col">Created Date/Time</th>
+      <th scope="col">Completed Date/Time</th>
       <th scope="col"></th>
     </tr>
   </thead>
@@ -141,7 +141,7 @@ if ($result->num_rows > 0) {
         <td scope="col"><?php echo $orderLest->requested_date; ?></td>
         <td scope="col"><?php echo $orderLest->completed_date; ?></td>
         <td scope="col">
-          <a href="/patients-info.php?pid=<?php echo $orderLest->pid; ?>" class="btn btn-default btn-sm" role="button"
+          <a href="/lab-orders-info.php?ln=<?php echo $orderLest->ln; ?>" class="btn btn-default btn-sm" role="button"
             aria-disabled="true">Edit</a>
         </td>
       </tr>
