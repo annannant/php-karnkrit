@@ -32,7 +32,9 @@ if (isset($_GET['ln'])) { // is edit
   $sqlTest = "SELECT * FROM order_test 
   INNER JOIN lab_test ON order_test.lab_test_test_id = lab_test.test_id
   INNER JOIN specimen ON specimen.specimen_id = lab_test.specimen_id 
-  WHERE lab_order_ln = '" . $ln . "';";
+  WHERE lab_order_ln = '" . $ln . "' 
+  ORDER BY order_test.requested_date ASC
+  ;";
   $resultTest = $conn->query($sqlTest);
   if ($resultTest->num_rows > 0) {
     while ($data = $resultTest->fetch_object()) {
@@ -113,7 +115,7 @@ if ($result->num_rows > 0) {
           <label for="pid" class="form-label">Patient ID (PID)</label>
           <div>
             <select id="pid" name="pid" class="js-example-basic-multiple js-states form-control"
-              aria-label="Default select example" <?php echo $hasCompleted === true ? 'disabled' : '' ?>>
+              aria-label="Default select example" <?php echo $hasCompleted ? 'disabled' : '' ?>>
               <option <?php echo $pid === '' ? 'selected' : '' ?>>Please Select</option>
               <?php foreach ($patients as $patient) { ?>
                 <option value="<?php echo $patient->pid; ?>" <?php echo $pid === $patient->pid ? 'selected' : '' ?>>
@@ -126,9 +128,9 @@ if ($result->num_rows > 0) {
         <div class="col-full">
           <label for="vn" class="form-label">Visit Number (VN)</label>
           <div>
-            <select id="vn" name="vn" class="js-example-basic-multiple js-states form-control"
-              aria-label="Default select example"
-              disabled="<?php echo $hasCompleted === true || !$isEdit ? "disabled" : null  ?>">
+            <select id="vn" name="vn" <?php echo $hasCompleted || !$isEdit ? "disabled" : '' ?>
+             class="js-example-basic-multiple js-states form-control"
+              aria-label="Default select example">
               <option <?php echo $vn === '' ? 'selected' : '' ?>>Please Select</option>
               <?php foreach ($visits as $visit) { ?>
                 <option value="<?php echo $visit->vn; ?>" <?php echo $vn === $visit->vn ? 'selected' : '' ?>>
@@ -178,9 +180,10 @@ if ($result->num_rows > 0) {
                   <td><?php echo $orderTest->ref_range ?></td>
                   <td><?php echo $orderTest->specimen_name ?></td>
                   <td>
-                    <input type="text" class="form-control" name="updateResult[<?php echo $key + 1; ?>]"
-                      id="updateResult<?php echo $key + 1; ?>" value="<?php echo $orderTest->lab_test_result ?>"
-                      disabled="<?php echo $orderTest->completed_date !== null ? 'disabled' : false ?>">
+                    <input type="text" class="form-control" 
+                      <?php echo !empty($orderTest->completed_date) ? 'disabled' : '' ?>
+                      name="updateResult[<?php echo $key + 1; ?>]" id="updateResult<?php echo $key + 1; ?>"
+                      value="<?php echo $orderTest->lab_test_result ?>">
                   </td>
                   <td><?php echo empty($orderTest->requested_date) ? '-' : $orderTest->requested_date; ?></td>
                   <td>
@@ -198,9 +201,8 @@ if ($result->num_rows > 0) {
                   </td>
                   <td id="deleteRecord<?php echo $key + 1; ?>">
                     <?php if ($orderTest->completed_date === null) { ?>
-                        <button type="button" class="btn btn-danger btn-sm"
-                        onclick="deleteRecord(<?php echo $key + 1; ?>, <?php echo $orderTest->lab_test_test_id ?>, <?php echo $orderTest->lab_order_ln ?>, )"
-                        >Delete</button>
+                      <button type="button" class="btn btn-danger btn-sm"
+                        onclick="deleteRecord(<?php echo $key + 1; ?>, <?php echo $orderTest->lab_test_test_id ?>, <?php echo $orderTest->lab_order_ln ?>, )">Delete</button>
                     <?php } ?>
                   </td>
                 </tr>

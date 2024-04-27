@@ -33,7 +33,7 @@ if (!empty($_GET['createDate'])) {
   $sql .= " AND order_test.requested_date between '" . $createDate . "' and NOW()";
 }
 
-$sql .= ' ORDER BY ln DESC;';
+$sql .= ' ORDER BY ln DESC, order_test.requested_date ASC;';
 // echo $sql;
 
 $orderLests = [];
