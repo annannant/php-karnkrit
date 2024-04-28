@@ -40,7 +40,7 @@ if (!empty($_GET['createDate'])) {
 $sql .= ' ORDER BY ln DESC, order_test.requested_date ASC;';
 // echo $sql;
 
-$orderLests = [];
+$orderTests = [];
 $result = $conn->query($sql);
 if ($conn->error) {
   echo $conn->error;
@@ -48,7 +48,7 @@ if ($conn->error) {
 
 if ($result->num_rows > 0) {
   while ($data = $result->fetch_object()) {
-    $orderLests[] = $data;
+    $orderTests[] = $data;
   }
 }
 // END : SEARCH - LAB ORDERS
@@ -137,7 +137,7 @@ if ($result->num_rows > 0) {
   </thead>
   <tbody>
     <!-- $patients = []; -->
-    <?php foreach ($orderLests as $orderLest) { ?>
+    <?php foreach ($orderTests as $orderLest) { ?>
       <tr>
         <td scope="col"><?php echo $orderLest->ln; ?></td>
         <td scope="col"><?php echo $orderLest->pid; ?> - <?php echo $orderLest->name; ?></td>
