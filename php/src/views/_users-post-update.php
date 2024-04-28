@@ -26,8 +26,7 @@ if (isset($_POST['username'])) {
       WHERE user_id = '" . $_POST['user_id'] . "';
       ";
   }
-  // echo $sql;
-  // exit();
+
   if ($conn->query($sql)) {
     echo "New record created successfully";
   } else {
