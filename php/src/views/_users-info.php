@@ -96,8 +96,6 @@ if ($Sesultspecimen->num_rows > 0) {
         </div>
       </div>
       <div class="col-full">
-      <?php echo $info->status; ?>
-
         <label for="status" class="form-label">Status</label>
         <div>
           <div class="form-check form-check-inline">
