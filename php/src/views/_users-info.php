@@ -52,7 +52,7 @@ if ($Sesultspecimen->num_rows > 0) {
     <div class="row column-gap-3 row-gap-3">
       <?php if (isset($_GET['user_id'])): ?>
         <div class="col-full">
-          <label for="user_id" class="form-label">PID</label>
+          <label for="user_id" class="form-label">User ID</label>
           <input type="input" readonly class="form-control disabled" name="user_id" placeholder=""
             value="<?php echo $_GET['user_id'] ?>">
         </div>
@@ -64,13 +64,13 @@ if ($Sesultspecimen->num_rows > 0) {
       </div>
       <?php if (!$isEdit) { ?>
       <div class="col-full">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" name="password" placeholder=""
+        <label for="createPassword" class="form-label">Password</label>
+        <input type="createPassword" class="form-control" name="createPassword" placeholder=""
           value="">
       </div>
       <div class="col-full">
-        <label for="confirmPassword" class="form-label">Confirm Password</label>
-        <input type="password" class="form-control" name="confirmPassword"
+        <label for="confirmCreatePassword" class="form-label">Confirm Password</label>
+        <input type="password" class="form-control" name="confirmCreatePassword"
           value="">
       </div>
       <?php } ?>
