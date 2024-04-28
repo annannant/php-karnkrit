@@ -57,7 +57,7 @@ if ($result->num_rows > 0) {
 
 <p></p>
 <div class="w-full d-flex justify-content-between">
-  <h3>Patient List</h3>
+  <h3>User List</h3>
   <a href="/users-info.php" class="btn btn-primary " role="button" aria-disabled="true">Create User</a>
 </div>
 
