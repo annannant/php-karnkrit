@@ -12,8 +12,9 @@ if (isset($_GET['search'])) {
   $search = $_GET['search'];
   $sql = "SELECT * FROM users 
   INNER JOIN section ON users.section_id = section.section_id
-  WHERE first_name LIKE '%". $search ."%' OR 
-  last_name LIKE '%". $search ."%' OR
+  WHERE user_name LIKE '%". $search ."%' OR 
+  job_title LIKE '%". $search ."%' OR
+  section.section_name LIKE '%". $search ."%' OR
   user_id LIKE '%". $search ."%'
   ORDER BY user_id DESC;";
 }
@@ -84,7 +85,7 @@ if ($result->num_rows > 0) {
       <td scope="col"><?php echo $user->status == 1 ? 'Active' : 'Inactive' ; ?></td>
       <td scope="col"><?php echo $user->create_date; ?></td>
       <td scope="col"><?php echo $user->last_login_date; ?></td>
-      <td scope="col"><?php echo $user->section_id; ?> - <?php echo $user->section_name; ?></td>
+      <td scope="col"><?php echo $user->section_name; ?></td>
       <td scope="col">
         <a href="/users-info.php?user_id=<?php echo $user->user_id; ?>" class="btn btn-default btn-sm" role="button" aria-disabled="true">Edit</a>
       </td>

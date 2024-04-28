@@ -21,7 +21,7 @@ if (isset($_GET['test_id'])) {
 }
 // --- END : SELECT BY PID ---
 
-// --- START : SELECT Section ---
+// --- START : SELECT specimen ---
 $sqlSection = 'SELECT * FROM specimen WHERE status = 1 ORDER BY specimen_name ASC;';
 $specimens = [];
 $resultSection = $conn->query($sqlSection);
@@ -30,18 +30,18 @@ if ($resultSection->num_rows > 0) {
     $specimens[] = $dataSection;
   }
 }
-// --- END : SELECT Section ---
+// --- END : SELECT specimen ---
 
-// --- START : SELECT Specimen ---
-$Sqlspecimen = 'SELECT * FROM section ORDER BY section_name ASC;';
+// --- START : SELECT Section ---
+$sqlSection = 'SELECT * FROM section ORDER BY section_name ASC;';
 $sections = [];
-$Sesultspecimen = $conn->query($Sqlspecimen);
+$Sesultspecimen = $conn->query($sqlSection);
 if ($Sesultspecimen->num_rows > 0) {
   while ($Sataspecimen = $Sesultspecimen->fetch_object()) {
     $sections[] = $Sataspecimen;
   }
 }
-// --- END : SELECT Specimen ---
+// --- END : SELECT Section ---
 
 
 $conn->close();
