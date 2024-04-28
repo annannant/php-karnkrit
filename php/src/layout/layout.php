@@ -1,6 +1,7 @@
 <?php
-  include ('./config/db.php');
-  include ('./config/datetime.php');
+include ('./config/db.php');
+include ('./config/datetime.php');
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,7 +31,7 @@
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-  <?php  $uri = $_SERVER['REQUEST_URI']; ?>
+  <?php $uri = $_SERVER['REQUEST_URI']; ?>
   <main class="d-flex flex-nowrap">
     <div class="sidebar d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 230px;">
       <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
@@ -41,19 +42,17 @@
       </a>
       <hr>
       <ul class="nav nav-pills flex-column mb-auto">
-      
+
         <li class="nav-item">
           <a href="patients.php" class="nav-link
-            <?php echo strpos($uri, 'patients') > 0 ? "active" : "link-body-emphasis"; ?>"
-            aria-current="page">
+            <?php echo strpos($uri, 'patients') > 0 ? "active" : "link-body-emphasis"; ?>" aria-current="page">
             <!-- <i class="bi bi-pentagon me-2"></i> -->
             Patients
           </a>
         </li>
         <li class="nav-item">
           <a href="patient-rights.php" class="nav-link
-            <?php echo strpos($uri, 'patient-rights') > 0 ? "active" : "link-body-emphasis"; ?>"
-            aria-current="page">
+            <?php echo strpos($uri, 'patient-rights') > 0 ? "active" : "link-body-emphasis"; ?>" aria-current="page">
             <!-- <i class="bi bi-pentagon me-2"></i> -->
             Patient Rights
           </a>
@@ -67,54 +66,53 @@
         </li> -->
         <li>
           <a href="lab-orders.php" class="nav-link 
-          <?php echo strpos($uri, 'lab-orders') > 0  ? "active" : "link-body-emphasis"; ?>"
-          >
-          <!-- <i class="bi bi-pentagon me-2"></i> -->
+          <?php echo strpos($uri, 'lab-orders') > 0 ? "active" : "link-body-emphasis"; ?>">
+            <!-- <i class="bi bi-pentagon me-2"></i> -->
             Lab Orders
           </a>
         </li>
         <li>
           <a href="tests.php" class="nav-link 
-          <?php echo strpos($uri, 'tests') > 0  ? "active" : "link-body-emphasis"; ?>"
-          >
-          <!-- <i class="bi bi-pentagon me-2"></i> -->
+          <?php echo strpos($uri, 'tests') > 0 ? "active" : "link-body-emphasis"; ?>">
+            <!-- <i class="bi bi-pentagon me-2"></i> -->
             Tests
           </a>
         </li>
         <li>
           <a href="specimens.php" class="nav-link 
-          <?php echo strpos($uri, 'specimens') > 0  ? "active" : "link-body-emphasis"; ?>"
-          >
-          <!-- <i class="bi bi-pentagon me-2"></i> -->
+          <?php echo strpos($uri, 'specimens') > 0 ? "active" : "link-body-emphasis"; ?>">
+            <!-- <i class="bi bi-pentagon me-2"></i> -->
             Specimens
           </a>
         </li>
         <li>
           <a href="containers.php" class="nav-link 
-          <?php echo strpos($uri, 'containers') > 0  ? "active" : "link-body-emphasis"; ?>"
-          >
-          <!-- <i class="bi bi-pentagon me-2"></i> -->
+          <?php echo strpos($uri, 'containers') > 0 ? "active" : "link-body-emphasis"; ?>">
+            <!-- <i class="bi bi-pentagon me-2"></i> -->
             Containers
           </a>
         </li>
         <li>
           <a href="sections.php" class="nav-link 
-          <?php echo strpos($uri, 'sections') > 0  ? "active" : "link-body-emphasis"; ?>"
-          >
-          <!-- <i class="bi bi-pentagon me-2"></i> -->
+          <?php echo strpos($uri, 'sections') > 0 ? "active" : "link-body-emphasis"; ?>">
+            <!-- <i class="bi bi-pentagon me-2"></i> -->
             Sections
           </a>
         </li>
         <li>
           <a href="users.php" class="nav-link 
-          <?php echo strpos($uri, 'users') > 0  ? "active" : "link-body-emphasis"; ?>"
-          >
-          <!-- <i class="bi bi-pentagon me-2"></i> -->
+          <?php echo strpos($uri, 'users') > 0 ? "active" : "link-body-emphasis"; ?>">
+            <!-- <i class="bi bi-pentagon me-2"></i> -->
             Users
           </a>
         </li>
       </ul>
       <hr>
+      <div>
+        <a href="logout.php" class="nav-link link-body-emphasis">
+          Log out
+        </a>
+      </div>
     </div>
     <div class="content">
       <div class="content-wrapper card ">
