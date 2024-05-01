@@ -1,6 +1,35 @@
 <?php
 
+$isEdit = false;
+$isCreate = true;
+if (isset($_GET['ln'])) {
+  $isEdit = true;
+  $isCreate = false;
+}
+
+$ln = "";
 $pid = "";
+$vn = "";
+// START : FOR CREATE LAB ORDER
+if ($isCreate === true) {
+  // ------> START : FIND Latest Lab Number
+  $sql = "SELECT MAX(ln) + 1 as latest_ln FROM lab_order LIMIT 1;";
+  $result = $conn->query($sql);
+  if ($result->num_rows > 0) {
+    $data = $result->fetch_object();
+    $ln = $data->latest_ln;
+  }
+  if ($ln === null) {
+    $ln = 6700001; // default ln
+  }
+  // ------> END : FIND Lab Number
+
+}
+// END : FOR CREATE LAB ORDER
+// ---------------------------------------------
+
+
+// START : FIND OPTIONS PATIENT
 $patients = [];
 $sql = $sql = "SELECT * FROM patient ORDER BY pid ASC;";
 $result = $conn->query($sql);
@@ -9,17 +38,14 @@ if ($result->num_rows > 0) {
     $patients[] = $data;
   }
 }
+// END : FIND OPTIONS PATIENT
+// ---------------------------------------------
 
 
-$isEdit = false;
-$ln = "";
-$vn = "";
-$info = new stdClass();
-$orderTests = [];
-$hasCompleted = false;
-if (isset($_GET['ln'])) { // is edit
+// ------------------ START : FOR EDIT ONLY ---------------------------
+// START : FOR EDIT LAB ORDER
+if ($isEdit === true) {
   $ln = $_GET['ln'];
-  $isEdit = true;
   $sql = "SELECT * FROM lab_order WHERE ln = '" . $ln . "';";
   $result = $conn->query($sql);
   if ($result->num_rows > 0) {
@@ -28,7 +54,27 @@ if (isset($_GET['ln'])) { // is edit
     $vn = $data->vn;
     $pid = $data->pid;
   }
+}
+// END : FOR EDIT LAB ORDER
+// ---------------------------------------------
 
+// START : FIND OPTIONS VISIT
+$visits = [];
+if ($isEdit === true && $pid !== "") {
+  $sql = $sql = "SELECT * FROM visit WHERE pid = '" . $pid . "' ORDER BY visit_date DESC;";
+  $result = $conn->query($sql);
+  if ($result->num_rows > 0) {
+    while ($data = $result->fetch_object()) {
+      $visits[] = $data;
+    }
+  }
+}
+// END : FIND OPTIONS VISIT
+// ---------------------------------------------
+
+// START : FIND ORDER TESTS
+$orderTests = [];
+if ($isEdit === true && $ln) {
   $sqlTest = "SELECT * FROM order_test 
   INNER JOIN lab_test ON order_test.lab_test_test_id = lab_test.test_id
   INNER JOIN specimen ON specimen.specimen_id = lab_test.specimen_id 
@@ -44,52 +90,42 @@ if (isset($_GET['ln'])) { // is edit
     }
   }
 
+}
+// END : FIND ORDER TESTS
+// ---------------------------------------------
 
-  // find complated data
+
+// START : FIND OPTIONS LAB TESTS
+$tests = [];
+if ($isEdit === true) {
+  $sql = 'SELECT lab_test.*, section.section_name, specimen.specimen_name FROM lab_test 
+  INNER JOIN section ON section.section_id = lab_test.section_id 
+  INNER JOIN specimen ON specimen.specimen_id = lab_test.specimen_id 
+  ORDER BY test_id;';
+  $result = $conn->query($sql);
+  if ($result->num_rows > 0) {
+    while ($data = $result->fetch_object()) {
+      $tests[] = $data;
+    }
+  }
+}
+// END : FIND OPTIONS LAB TESTS
+// ---------------------------------------------
+
+
+// START : CHECK HAS COMPLETED
+$hasCompleted = false;
+if ($isEdit == true) {
   foreach ($orderTests as $element) {
     if ($element->completed_date !== null) {
       $hasCompleted = true;
       break;
     }
   }
-  // echo json_encode($orderTests);
-} else {
-  $sql = "SELECT MAX(ln) + 1 as latest_ln FROM lab_order LIMIT 1;";
-  $result = $conn->query($sql);
-  if ($result->num_rows > 0) {
-    $data = $result->fetch_object();
-    $ln = $data->latest_ln;
-  }
-  if ($ln === null) {
-    $ln = 6700001; // default ln
-  }
 }
 
-$visits = [];
-if ($pid !== "") {
-  $sql = $sql = "SELECT * FROM visit WHERE pid = '" . $pid . "' ORDER BY visit_date DESC;";
-  $result = $conn->query($sql);
-  if ($result->num_rows > 0) {
-    while ($data = $result->fetch_object()) {
-      $visits[] = $data;
-    }
-  }
-}
-
-
-
-$tests = [];
-$sql = 'SELECT lab_test.*, section.section_name, specimen.specimen_name FROM lab_test 
-INNER JOIN section ON section.section_id = lab_test.section_id 
-INNER JOIN specimen ON specimen.specimen_id = lab_test.specimen_id 
-ORDER BY test_id;';
-$result = $conn->query($sql);
-if ($result->num_rows > 0) {
-  while ($data = $result->fetch_object()) {
-    $tests[] = $data;
-  }
-}
-
+// END : CHECK HAS COMPLETED
+// ---------------------------------------------
 
 ?>
 
