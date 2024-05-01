@@ -20,7 +20,7 @@ if ($isCreate === true) {
     $ln = $data->latest_ln;
   }
   if ($ln === null) {
-    $ln = 6700001; // default ln
+    $ln = 1; // default ln
   }
   // ------> END : FIND Lab Number
 
