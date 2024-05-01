@@ -1,93 +1,102 @@
 <?php
 include ('../config/db.php');
 
-// print_r($_POST);
-
-// echo "<br/>";
-// foreach($tests as $key=>$value) {
-//   echo $value . "<br/>";
-//   echo $testName[$key] . "<br/>";
-// }
-
-// echo json_encode($_POST);
-// exit();
-
-$last_ln = "";
 $isEdit = isset($_POST['isEdit']) && $_POST['isEdit'] === 'true';
-if (isset($_POST['pid']) && isset($_POST['vn'])) {
+$isCreate = !$isEdit;
+
+$pid = "";
+$vn = "";
+$ln = "";
+
+// START : FOR CREATE LAB ORDER
+if ($isCreate === true) {
+  $ln = 0;
   $pid = $_POST['pid'];
   $vn = $_POST['vn'];
-  if ($isEdit) {
+  // ------> START : CREATE LAB ORDER
+  $sql = "INSERT INTO lab_order VALUES (NULL, '" . $pid . "', " . $vn . ", NOW());";
+  if ($conn->query($sql)) {
+    $ln = $conn->insert_id;
+    echo "New record created successfully";
+  } else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+    exit();
+  }
+  // ------> END : CREATE LAB ORDER
+}
+// END : FOR CREATE LAB ORDER
+// ---------------------------------------------
+
+// START : FOR EDIT LAB ORDER
+if ($isEdit === true) {
+  $ln = $_POST['ln'];
+  if (isset($_POST['pid']) && isset($_POST['vn'])) {
+    $pid = $_POST['pid'];
+    $vn = $_POST['vn'];
     $sql = "UPDATE lab_order SET
     pid = '" . $pid . "',
     vn = '" . $vn . "'
     WHERE ln = '" . $_POST['ln'] . "';
     ";
-    $last_ln = $_POST['ln'];
     if ($conn->query($sql)) {
-      echo "New record created successfully";
-    } else {
-      echo "Error: " . $sql . "<br>" . $conn->error;
-      exit();
-    }
-  } else {
-    $sql = "INSERT INTO lab_order VALUES (NULL, '" . $pid . "', " . $vn . ", NOW());";
-    if ($conn->query($sql)) {
-      $last_ln = $conn->insert_id;
-      echo "New record created successfully";
+      echo "Record updated successfully";
     } else {
       echo "Error: " . $sql . "<br>" . $conn->error;
       exit();
     }
   }
 }
+// END : FOR CREATE LAB ORDER
+// ---------------------------------------------
 
-if (isset($_POST['updateTestId'])) {
-  $updateTestIds = $_POST['updateTestId'];
-  $updateResult = isset($_POST['updateResult']) ? $_POST['updateResult'] : [];
-  $updateCompleted = isset($_POST['updateCompleted']) ? $_POST['updateCompleted'] : [];
-  foreach ($updateTestIds as $key => $value) {
-    $updateTestIdID = $value;
-    $updateResultValue = isset($updateResult[$key]) ? $updateResult[$key] : null;
-    $updateCompletedValue = isset($updateCompleted[$key]) && $updateCompleted[$key] === 'checked' ? 'NOW()' : null;
 
-    $up = [];
-    if ($updateResultValue !== null) {
-      $up[] = "lab_test_result = '" . $updateResultValue . "' ";
+
+// START : FOR UPDATE ORDER TESTS
+if ($isEdit === true && isset($_POST['updateTestId'])) {
+  $testIDs = $_POST['updateTestId'];
+  $results = isset($_POST['updateResult']) ? $_POST['updateResult'] : [];
+  $comps = isset($_POST['updateCompleted']) ? $_POST['updateCompleted'] : [];
+  foreach ($testIDs as $key => $value) {
+    $testID = $value;
+    $result = isset($results[$key]) ? $results[$key] : null;
+    $completed = isset($comps[$key]) && $comps[$key] === 'checked' ? 'NOW()' : null;
+    $update = [];
+    if ($result !== null) {
+      $update[] = "lab_test_result = '" . $result . "' ";
     }
 
-    if ($updateCompletedValue !== null) {
-      $up[] = "completed_date = NOW() ";
+    if ($completed !== null) {
+      $update[] = "completed_date = NOW() ";
     }
 
-    if (empty($up)) {
+    if (empty($update)) {
       continue;
     }
 
     $sql = "UPDATE order_test SET
-      " . implode(", ", $up) . "
-      WHERE lab_order_ln = '" . $_POST['ln'] . "' AND lab_test_test_id = '" . $updateTestIdID . "';
+      " . implode(", ", $update) . "
+      WHERE lab_order_ln = '" . $_POST['ln'] . "' AND lab_test_test_id = '" . $testID . "';
     ";
 
     if ($conn->query($sql)) {
-      echo "New record created successfully";
+      echo "New order test updated successfully";
     } else {
       echo "Error: " . $sql . "<br>" . $conn->error;
       exit();
     }
   }
 }
-
-$last_ln = isset($_POST['ln']) ? $_POST['ln'] : $last_ln;
+// END : FOR UPDATE ORDER TESTS
+// ---------------------------------------------
 if (isset($_POST['newTest'])) {
-  $newTests = $_POST['newTest'];
-  $newTestName = $_POST['newTestName'];
-  $newResult = $_POST['newResult'];
-  foreach ($newTests as $key => $value) {
+  $testIDs = $_POST['newTest'];
+  $testNames = $_POST['newTestName'];
+  $results = $_POST['newResult'];
+  foreach ($testIDs as $key => $value) {
     $newTestID = $value;
-    $newTestNameValue = $newTestName[$key];
-    $newResultValue = $newResult[$key];
-    $sql = "INSERT INTO order_test VALUES ('" . $last_ln . "', '" . $newTestID . "', '" . $newTestNameValue . "', '" . $newResultValue . "', NOW(), NULL);";
+    $testName = $testNames[$key];
+    $result = $results[$key];
+    $sql = "INSERT INTO order_test VALUES ('" . $ln . "', '" . $newTestID . "', '" . $testName . "', '" . $result . "', NOW(), NULL);";
     if ($conn->query($sql)) {
       echo "New record created successfully";
     } else {
@@ -96,6 +105,12 @@ if (isset($_POST['newTest'])) {
     }
   }
 }
+// START : FOR CREATE ORDER TESTS
+// END : FOR CREATE ORDER TESTS
+// ---------------------------------------------
+
+
+
 
 $conn->close();
 ?>
@@ -105,7 +120,6 @@ $conn->close();
   </script>
 <?php } else { ?>
   <script type="text/javascript">
-    // window.location = "/lab-orders-info-test.php?ln=<?php echo $last_ln ?>";
     window.location = "/lab-orders.php";
   </script>
 <?php } ?>

@@ -37,7 +37,8 @@ if (!empty($_GET['createDate'])) {
   $sql .= " AND DATE_FORMAT(order_test.requested_date, '%Y-%m-%d') = '" . $createDate . "'";
 }
 
-$sql .= ' ORDER BY ln DESC, order_test.requested_date ASC;';
+$sql .= ' ORDER BY ln DESC, order_test.requested_date ASC, lab_test_test_id ASC;';
+
 // echo $sql;
 
 $orderTests = [];

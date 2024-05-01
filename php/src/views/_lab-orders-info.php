@@ -80,7 +80,7 @@ if ($isEdit === true && $ln) {
   INNER JOIN specimen ON specimen.specimen_id = lab_test.specimen_id 
   INNER JOIN section ON section.section_id = lab_test.section_id 
   WHERE lab_order_ln = '" . $ln . "' 
-  ORDER BY order_test.requested_date ASC
+  ORDER BY order_test.requested_date ASC, lab_test_test_id ASC
   ;";
 
   $resultTest = $conn->query($sqlTest);
@@ -115,7 +115,7 @@ if ($isEdit === true) {
 
 // START : CHECK HAS COMPLETED
 $hasCompleted = false;
-if ($isEdit == true) {
+if ($isEdit === true) {
   foreach ($orderTests as $element) {
     if ($element->completed_date !== null) {
       $hasCompleted = true;
