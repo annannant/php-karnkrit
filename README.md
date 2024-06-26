@@ -14,8 +14,11 @@ http://localhost:8000/
 ## PHPMyAdmin 
 ```
 http://localhost:8080/
+
 ```
 
+MYSQL_DATABASE: laboratory
+MYSQL_USER: laboratory
 
 ## Materials
 
