@@ -10,6 +10,7 @@ if (isset($_GET['ln'])) {
 $ln = "";
 $pid = "";
 $vn = "";
+$notes = "";
 // START : FOR CREATE LAB ORDER
 if ($isCreate === true) {
   // ------> START : FIND Latest Lab Number
@@ -53,6 +54,7 @@ if ($isEdit === true) {
     $ln = $data->ln;
     $vn = $data->vn;
     $pid = $data->pid;
+    $notes = $data->notes;
   }
 }
 // END : FOR EDIT LAB ORDER
@@ -178,6 +180,11 @@ if ($isEdit === true) {
             </select>
           </div>
         </div>
+        <div class="col-full">
+          <label for="notes" class="form-label">Notes</label>
+          <input type="input" class="form-control" name="notes" placeholder="" value="<?php echo $notes ?? '' ?>">
+        </div>
+
       </div>
     </div>
     <hr class="mt-5">

@@ -1,4 +1,5 @@
 <?php
+include ('../config/check-login.php');
 include ('../config/db.php');
 
 $isEdit = isset($_POST['isEdit']) && $_POST['isEdit'] === 'true';
@@ -13,8 +14,10 @@ if ($isCreate === true) {
   $ln = 0;
   $pid = $_POST['pid'];
   $vn = $_POST['vn'];
+  $notes = $_POST['notes'];
+  $user_id = $_SESSION['user'];
   // ------> START : CREATE LAB ORDER
-  $sql = "INSERT INTO lab_order VALUES (NULL, '" . $pid . "', " . $vn . ", NOW());";
+  $sql = "INSERT INTO lab_order VALUES (NULL, '" . $pid . "', " . $vn . ", NOW(), NULL, ".$user_id.", '".$notes."');";
   if ($conn->query($sql)) {
     $ln = $conn->insert_id;
     echo "New record created successfully";
@@ -30,12 +33,14 @@ if ($isCreate === true) {
 // START : FOR EDIT LAB ORDER
 if ($isEdit === true) {
   $ln = $_POST['ln'];
+  $notes = $_POST['notes'];
   if (isset($_POST['pid']) && isset($_POST['vn'])) {
     $pid = $_POST['pid'];
     $vn = $_POST['vn'];
     $sql = "UPDATE lab_order SET
     pid = '" . $pid . "',
-    vn = '" . $vn . "'
+    vn = '" . $vn . "',
+    notes = '" . $notes . "'
     WHERE ln = '" . $_POST['ln'] . "';
     ";
     if ($conn->query($sql)) {
@@ -110,6 +115,31 @@ if (isset($_POST['newTest'])) {
 // ---------------------------------------------
 
 
+
+// START : FOR CHECK COMPLETE ORDER 
+$totalInprogreess = null;
+$sqlCoutInprocessTest = "SELECT COUNT(*) as total  FROM `order_test` WHERE `completed_date` IS NULL AND lab_order_ln = " . $ln . ";";
+$result = $conn->query($sqlCoutInprocessTest);
+if ($conn->error) {
+  echo $conn->error;
+}
+if ($result->num_rows > 0) {
+  $res = $result->fetch_assoc();
+  $totalInprogreess = $res['total'];
+}
+echo $totalInprogreess;
+if ($totalInprogreess == 0) {
+  $sqlStatusLabOrder = "UPDATE lab_order SET
+  order_status = 'Completed'
+  WHERE ln = " . $ln . ";";
+  if ($conn->query($sqlStatusLabOrder)) {
+    echo "Record updated complete successfully";
+  } else {
+    echo "Error: " . $sqlStatusLabOrder . "<br>" . $conn->error;
+    exit();
+  }
+}
+// END : FOR CHECK COMPLETE ORDER 
 
 
 $conn->close();
