@@ -3,7 +3,6 @@
 include ('config/db.php');
 
 
-$search = '';
 $sql = 'SELECT 
   order_test.lab_test_name as "test_name", 
   patient_rights.patient_rights_desc as "patient_rights", 
@@ -14,14 +13,14 @@ FROM
   JOIN visit on lab_order.vn = visit.vn 
   JOIN patient_rights on visit.patient_rights_ID = patient_rights.patient_rights_ID ';
 
-$createDateFrom = "";
-$createDateFrom = "";
-$createDateTo = "";
-if (!empty($_GET['createDateFrom']) && !empty($_GET['createDateTo'])) {
-  $createDateFrom = $_GET['createDateFrom'];
-  $createDateTo = $_GET['createDateTo'];
+$dateFrom = "";
+$dateFrom = "";
+$dateTo = "";
+if (!empty($_GET['dateFrom']) && !empty($_GET['dateTo'])) {
+  $dateFrom = $_GET['dateFrom'];
+  $dateTo = $_GET['dateTo'];
   $sql .= strpos($sql, 'WHERE') > 0 ? ' AND' : ' WHERE';
-  $sql .= " order_test.requested_date BETWEEN '" . $createDateFrom . " 00:00:00' AND '" . $createDateTo . " 23:59:59'";
+  $sql .= " order_test.requested_date BETWEEN '" . $dateFrom . " 00:00:00' AND '" . $dateTo . " 23:59:59'";
 } else {
   $sql .= strpos($sql, 'WHERE') > 0 ? ' AND' : ' WHERE';
   $sql .= " order_test.requested_date BETWEEN '" . date("Y-m-d") . " 00:00:00' AND '" . date("Y-m-d") . " 23:59:59'";
@@ -39,7 +38,6 @@ $sql .= " GROUP by
   patient_rights.patient_rights_desc
   ORDER BY patient_rights.patient_rights_desc;";
 
-// echo $sql;
 $list = [];
 $result = $conn->query($sql);
 if ($conn->error) {
@@ -51,6 +49,8 @@ if ($result->num_rows > 0) {
     $list[] = $data;
   }
 }
+// END : FOR SELECT REPORT
+// ---------------------------------------------
 
 
 // START : SELECT PATIENT RIGHT
@@ -66,9 +66,6 @@ if ($result->num_rows > 0) {
   }
 }
 // END : SELECT PATIENT RIGHT
-
-
-
 
 ?>
 
@@ -92,14 +89,14 @@ if ($result->num_rows > 0) {
         </div>
       </div>
       <div class="col-2">
-        <label for="createDateFrom" class="form-label">Created Date From</label>
-        <input type="input" readonly class="form-control " name="createDateFrom" id="createDateFrom" placeholder=""
-          value="<?php echo $createDateFrom; ?>">
+        <label for="dateFrom" class="form-label">Requested Date From</label>
+        <input type="input" readonly class="form-control " name="dateFrom" id="dateFrom" placeholder=""
+          value="<?php echo $dateFrom; ?>">
       </div>
       <div class="col-2">
-        <label for="createDateTo" class="form-label">Created Date To</label>
-        <input type="input" readonly class="form-control " name="createDateTo" id="createDateTo" placeholder=""
-          value="<?php echo $createDateTo; ?>">
+        <label for="dateTo" class="form-label">Requested Date To</label>
+        <input type="input" readonly class="form-control " name="dateTo" id="dateTo" placeholder=""
+          value="<?php echo $dateTo; ?>">
       </div>
     </div>
     <div class="row ">
@@ -151,12 +148,12 @@ if ($result->num_rows > 0) {
 
 <script type="text/javascript">
   $(document).ready(function () {
-    $('#createDateFrom').datepicker({
+    $('#dateFrom').datepicker({
       dateFormat: "yy-mm-dd",
       todayHighlight: true,
       autoclose: true,
     });
-    $('#createDateTo').datepicker({
+    $('#dateTo').datepicker({
       dateFormat: "yy-mm-dd",
       todayHighlight: true,
       autoclose: true,

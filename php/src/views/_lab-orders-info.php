@@ -184,7 +184,6 @@ if ($isEdit === true) {
           <label for="notes" class="form-label">Notes</label>
           <input type="input" class="form-control" name="notes" placeholder="" value="<?php echo $notes ?? '' ?>">
         </div>
-
       </div>
     </div>
     <hr class="mt-5">
