@@ -53,7 +53,7 @@ if ($result->num_rows > 0) {
 }
 
 
-// START : SELECT SECTION
+// START : SELECT PATIENT RIGHT
 $sqlPatientRight = 'SELECT * FROM `patient_rights` ORDER BY `patient_rights`.`patient_rights_desc` DESC';
 $patientRights = [];
 $result = $conn->query($sqlPatientRight);
@@ -65,7 +65,9 @@ if ($result->num_rows > 0) {
     $patientRights[] = $data;
   }
 }
-// END : SELECT SECTION
+// END : SELECT PATIENT RIGHT
+
+
 
 
 ?>
@@ -133,13 +135,13 @@ if ($result->num_rows > 0) {
   </thead>
   <tbody>
     <!-- $list = []; -->
-    <?php foreach ($list as $patient) { ?>
+    <?php foreach ($list as $item) { ?>
       <tr>
-        <td scope="col"><?php echo $patient->test_name; ?></td>
-        <td scope="col"><?php echo $patient->patient_rights; ?></td>
-        <td scope="col"><?php echo $patient->total_used; ?></td>
-        <!-- <td scope="col"><?php echo $patient->container_name; ?></td>
-        <td scope="col"><?php echo $patient->test_count; ?></td> -->
+        <td scope="col"><?php echo $item->test_name; ?></td>
+        <td scope="col"><?php echo $item->patient_rights; ?></td>
+        <td scope="col"><?php echo $item->total_used; ?></td>
+        <!-- <td scope="col"><?php echo $item->container_name; ?></td>
+        <td scope="col"><?php echo $item->test_count; ?></td> -->
         <td scope="col"></td>
       </tr>
     <?php } ?>

@@ -59,6 +59,8 @@ include ('./config/datetime.php');
         return 'sections';
       case strpos($uri, 'users') > 0:
         return 'users';
+      case strpos($uri, 'report-order-by-section') > 0:
+          return 'report-order-by-section';
       default:
         return '';
     }
@@ -156,6 +158,13 @@ include ('./config/datetime.php');
             class="nav-link
             <?php echo getActiveUrl() === 'report-test-consumption-by-patient-rights' ? "active" : "link-body-emphasis"; ?>" aria-current="page">
             Test Consumption by Patient Rights
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="report-order-by-section.php"
+            class="nav-link
+            <?php echo getActiveUrl() === 'report-order-by-section' ? "active" : "link-body-emphasis"; ?>" aria-current="page">
+            Orders by Section
           </a>
         </li>
       </ul>

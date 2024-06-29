@@ -96,13 +96,13 @@ if ($result->num_rows > 0) {
   </thead>
   <tbody>
     <!-- $list = []; -->
-    <?php foreach ($list as $patient) { ?>
+    <?php foreach ($list as $item) { ?>
       <tr>
-        <td scope="col"><?php echo $patient->lab_test_test_id; ?></td>
-        <td scope="col"><?php echo $patient->lab_test_name; ?></td>
-        <td scope="col"><?php echo $patient->specimen_name; ?></td>
-        <td scope="col"><?php echo $patient->container_name; ?></td>
-        <td scope="col"><?php echo $patient->test_count; ?></td>
+        <td scope="col"><?php echo $item->lab_test_test_id; ?></td>
+        <td scope="col"><?php echo $item->lab_test_name; ?></td>
+        <td scope="col"><?php echo $item->specimen_name; ?></td>
+        <td scope="col"><?php echo $item->container_name; ?></td>
+        <td scope="col"><?php echo $item->test_count; ?></td>
         <td scope="col"></td>
       </tr>
     <?php } ?>
