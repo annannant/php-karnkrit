@@ -4,7 +4,7 @@ include ('config/db.php');
 
 
 // START : FOR SELECT REPORT
-$sql = 'SELECT order_test.lab_order_ln, section.section_name, specimen.specimen_name , count(order_test.lab_order_ln) as "total_order"
+$sql = 'SELECT order_test.lab_order_ln, order_test.requested_date, section.section_name, specimen.specimen_name , count(order_test.lab_order_ln) as "total_order"
 FROM 
   order_test 
   JOIN lab_test on order_test.lab_test_test_id = lab_test.test_id
@@ -40,6 +40,7 @@ if (!empty($_GET['specimenID'])) {
 $sql .= "
 GROUP by 
 order_test.lab_order_ln,
+order_test.requested_date,
   section.section_name,
   specimen.specimen_name  
 ORDER BY `order_test`.`lab_order_ln` ASC;";
@@ -162,6 +163,7 @@ if ($result->num_rows > 0) {
       <th scope="col">Section Name</th>
       <th scope="col">Specimen Name</th>
       <th scope="col">Total</th>
+      <th scope="col">Requested Date</th>
       <th scope="col"></th>
     </tr>
   </thead>
@@ -173,6 +175,7 @@ if ($result->num_rows > 0) {
         <td scope="col"><?php echo $item->section_name; ?></td>
         <td scope="col"><?php echo $item->specimen_name; ?></td>
         <td scope="col"><?php echo $item->total_order; ?></td>
+        <td scope="col"><?php echo $item->requested_date; ?></td>
         <td scope="col"></td>
       </tr>
     <?php } ?>
