@@ -50,7 +50,7 @@ if ($result->num_rows > 0) {
 
 ?>
 
-<h1>Report - TAT Orders for Pending Result </h1>
+<h1>Report - TAT Incomplete Orders </h1>
 
 <!-- START: FORM SEARCH -->
 <form class="row g-3" method="get" action="report-order-tat.php">
@@ -82,14 +82,14 @@ if ($result->num_rows > 0) {
 
 <p></p>
 <div class="w-full d-flex justify-content-between">
-  <h3>TAT Orders for Pending Result </h3>
+  <h3>TAT Incomplete Orders </h3>
 </div>
 
 <p></p>
 <table class="table table-striped">
   <thead>
     <tr>
-      <th scope="col">Lab Order LN</th>
+      <th scope="col">LN</th>
       <th scope="col">Test Name</th>
       <th scope="col">Test Result</th>
       <th scope="col">Section Name</th>

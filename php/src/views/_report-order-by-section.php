@@ -4,7 +4,8 @@ include ('config/db.php');
 
 
 // START : FOR SELECT REPORT
-$sql = 'SELECT order_test.lab_order_ln, order_test.requested_date, section.section_name, specimen.specimen_name , count(order_test.lab_order_ln) as "total_order"
+$sql = 'SELECT order_test.lab_order_ln, 
+order_test.requested_date, section.section_name, specimen.specimen_name , count(order_test.lab_order_ln) as "total_test"
 FROM 
   order_test 
   JOIN lab_test on order_test.lab_test_test_id = lab_test.test_id
@@ -93,7 +94,7 @@ if ($result->num_rows > 0) {
 
 ?>
 
-<h1>Report - Orders by Section</h1>
+<h1>Report - Tests by Section</h1>
 
 <!-- START: FORM SEARCH -->
 <form class="row g-3" method="get" action="report-order-by-section.php">
@@ -151,7 +152,7 @@ if ($result->num_rows > 0) {
 
 <p></p>
 <div class="w-full d-flex justify-content-between">
-  <h3>Orders by Section</h3>
+  <h3>Tests by Section</h3>
   <!-- <a href="/report-order-by-section.php" class="btn btn-primary " role="button" aria-disabled="true">Create Patient</a> -->
 </div>
 
@@ -162,7 +163,7 @@ if ($result->num_rows > 0) {
       <th scope="col">LN</th>
       <th scope="col">Section Name</th>
       <th scope="col">Specimen Name</th>
-      <th scope="col">Total</th>
+      <th scope="col">Total Test</th>
       <th scope="col">Requested Date</th>
       <th scope="col"></th>
     </tr>
@@ -174,7 +175,7 @@ if ($result->num_rows > 0) {
         <td scope="col"><?php echo $item->lab_order_ln; ?></td>
         <td scope="col"><?php echo $item->section_name; ?></td>
         <td scope="col"><?php echo $item->specimen_name; ?></td>
-        <td scope="col"><?php echo $item->total_order; ?></td>
+        <td scope="col"><?php echo $item->total_test; ?></td>
         <td scope="col"><?php echo $item->requested_date; ?></td>
         <td scope="col"></td>
       </tr>

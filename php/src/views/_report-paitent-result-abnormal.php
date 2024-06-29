@@ -18,13 +18,13 @@ FROM
   JOIN order_test ON lab_order.ln = order_test.lab_order_ln 
   JOIN lab_test ON order_test.lab_test_test_id = lab_test.test_id 
 WHERE 
-  patient.pid IN (
+  lab_order.ln IN (
     SELECT 
-      pid 
+      ln
     FROM 
       (
         SELECT 
-          lab_order.pid, 
+          lab_order.ln, 
           COUNT(*) AS positive_count 
         FROM 
           lab_order 
@@ -46,15 +46,13 @@ if (!empty($_GET['dateFrom']) && !empty($_GET['dateTo'])) {
 $sql .= strpos($sql, 'WHERE') > 0 ? ' AND' : ' WHERE';
 $sql .= " order_test.lab_test_result IN ('Positive', 'POS', 'Pos') 
 GROUP BY 
-          lab_order.pid 
+          lab_order.ln
         HAVING 
           positive_count > 0
       ) AS total_abnormal
   ) 
 ORDER BY 
-  patient.last_name, 
-  patient.first_name, 
-  lab_test.test_name;
+  order_test.lab_order_ln;
 ";
 $list = [];
 $result = $conn->query($sql);

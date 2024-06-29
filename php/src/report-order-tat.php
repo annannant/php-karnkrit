@@ -1,7 +1,7 @@
 <?php
 include ('config/check-login.php');
 
-$title = 'TAT Orders for Pending Result ';
+$title = 'TAT Incomplete Orders ';
 $child = 'views/_report-order-tat.php';
 
 include('layout/layout.php');

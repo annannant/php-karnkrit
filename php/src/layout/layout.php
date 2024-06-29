@@ -168,7 +168,7 @@ include ('./config/datetime.php');
           <a href="report-order-by-section.php"
             class="nav-link
             <?php echo getActiveUrl() === 'report-order-by-section' ? "active" : "link-body-emphasis"; ?>" aria-current="page">
-            Orders by Section
+            Tests by Section
           </a>
         </li>
         <li class="nav-item">
@@ -182,7 +182,7 @@ include ('./config/datetime.php');
           <a href="report-order-tat.php"
             class="nav-link
             <?php echo getActiveUrl() === 'report-order-tat' ? "active" : "link-body-emphasis"; ?>" aria-current="page">
-            TAT Orders for Pending Result 
+            TAT Incomplete Orders 
           </a>
         </li>
       </ul>
