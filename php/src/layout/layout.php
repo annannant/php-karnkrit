@@ -63,6 +63,8 @@ include ('./config/datetime.php');
           return 'report-order-by-section';
       case strpos($uri, 'report-paitent-result-abnormal') > 0:
               return 'report-paitent-result-abnormal';
+      case strpos($uri, 'report-order-tat') > 0:
+        return 'report-order-tat';
       default:
         return '';
     }
@@ -174,6 +176,13 @@ include ('./config/datetime.php');
             class="nav-link
             <?php echo getActiveUrl() === 'report-paitent-result-abnormal' ? "active" : "link-body-emphasis"; ?>" aria-current="page">
             Patient Abnormal Result
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="report-order-tat.php"
+            class="nav-link
+            <?php echo getActiveUrl() === 'report-order-tat' ? "active" : "link-body-emphasis"; ?>" aria-current="page">
+            TAT Orders for Pending Result 
           </a>
         </li>
       </ul>

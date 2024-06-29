@@ -53,17 +53,46 @@ ORDER BY
 
 ==
 
--- Example: Find patients who have more than 1 lab orders
-SELECT *
-FROM patient
-WHERE patient.pid IN (
-    SELECT lab_order.pid
-    FROM lab_order
-    WHERE lab_order.created_date BETWEEN '2024-06-24 00:00:00' 
-  	AND '2024-06-28 23:59:59'
-    GROUP BY lab_order.pid
-    HAVING COUNT(lab_order.ln) > 1
-);
+SELECT 
+  lab_order.ln, 
+  patient.pid, 
+  patient.first_name, 
+  patient.last_name, 
+  lab_test.test_name, 
+  order_test.lab_test_result, 
+  order_test.requested_date, 
+  order_test.completed_date 
+FROM 
+  patient 
+  JOIN lab_order ON patient.pid = lab_order.pid 
+  JOIN order_test ON lab_order.ln = order_test.lab_order_ln 
+  JOIN lab_test ON order_test.lab_test_test_id = lab_test.test_id 
+WHERE 
+  patient.pid IN (
+    SELECT 
+      pid 
+    FROM 
+      (
+        SELECT 
+          lab_order.pid, 
+          COUNT(*) AS positive_count 
+        FROM 
+          lab_order 
+          JOIN order_test ON lab_order.ln = order_test.lab_order_ln 
+        WHERE 
+          order_test.requested_date BETWEEN '2024-06-29 00:00:00' 
+          AND '2024-06-29 23:59:59' 
+          AND order_test.lab_test_result IN ('Positive', 'POS', 'Pos') 
+        GROUP BY 
+          lab_order.pid 
+        HAVING 
+          positive_count > 0
+      ) AS total_count
+  ) 
+ORDER BY 
+  patient.last_name, 
+  patient.first_name, 
+  lab_test.test_name;
 
 ===
 
